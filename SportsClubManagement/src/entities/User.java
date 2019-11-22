@@ -2,11 +2,10 @@ package entities;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.validation.constraints.Pattern;
-/*mport javax.persistence.Table;
+import javax.persistence.Table;
 import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;*/
+import javax.validation.constraints.Pattern;
 import java.io.Serializable;
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
@@ -18,15 +17,15 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @Entity
-//@Table(name="USERS")
+@Table(name="USERS")
 public class User implements Serializable {
     @Id
     private String username;
-    //@NotNull
+    @NotNull
     private String password;
-    //@NotNull
+    @NotNull
     private String name;
-    //@NotNull
+    @NotNull
     @Pattern(regexp = "[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\."
             +"[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@"
             +"(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?",
