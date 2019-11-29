@@ -1,6 +1,5 @@
 package ws;
 
-
 import dtos.AdministradorDTO;
 import ejbs.AdministradorBean;
 import entities.Administrador;

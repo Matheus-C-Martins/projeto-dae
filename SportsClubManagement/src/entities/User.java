@@ -31,8 +31,8 @@ public class User implements Serializable {
             +"(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?",
             message = "{invalid.email}")
     private String email;
-    /*@Version
-    private int version;*/
+    @Version
+    private int version;
 
     public User() {
 
