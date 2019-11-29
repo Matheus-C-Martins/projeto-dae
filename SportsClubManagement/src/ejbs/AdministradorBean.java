@@ -6,6 +6,7 @@ import javax.ejb.EJBException;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.util.List;
 
 @Stateless(name = "AdministradorEJB")
 public class AdministradorBean {
@@ -18,6 +19,15 @@ public class AdministradorBean {
             entityManager.persist(a);
         }catch (Exception e){
             throw new EJBException(e);
+        }
+    }
+
+    public List<Administrador> all() {
+        try {
+            // remember, maps to: “SELECT s FROM Student s ORDER BY s.name”
+            return (List<Administrador>) entityManager.createNamedQuery("getAllAdministradores").getResultList();
+        } catch (Exception e) {
+            throw new EJBException("ERROR_RETRIEVING_STUDENTS", e);
         }
     }
 }

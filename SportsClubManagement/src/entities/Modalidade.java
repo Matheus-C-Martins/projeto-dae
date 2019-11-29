@@ -12,27 +12,26 @@ import java.util.Set;
 
 @Entity
 public class Modalidade implements Serializable {
-
     @Id
     private String nome;
     @NotNull
     @ManyToMany
     private Set<Socio> socios;
-    @NotNull
+    /*@NotNull
     @ManyToMany
-    private Set<Escaloes> escaloes;
+    private Set<Escaloes> escaloes;*/
     @NotNull
     private Date horario;
 
-    public Modalidade(){
+    public Modalidade() {
         this.socios = new HashSet<>();
-        this.escaloes = new HashSet<>();
+        //this.escaloes = new HashSet<>();
     }
 
     public Modalidade(String nome) {
         this.nome = nome;
         this.socios = new HashSet<>();
-        this.escaloes = new HashSet<>();
+        //this.escaloes = new HashSet<>();
     }
 
     public void setNome(String nome) {
@@ -51,13 +50,13 @@ public class Modalidade implements Serializable {
         return socios;
     }
 
-    public Set<Escaloes> getEscaloes() {
+    /*public Set<Escaloes> getEscaloes() {
         return escaloes;
-    }
+    }*/
 
-    public void setEscaloes(Set<Escaloes> escaloes) {
+    /*public void setEscaloes(Set<Escaloes> escaloes) {
         this.escaloes = escaloes;
-    }
+    }*/
 
     public Date getHorario() {
         return horario;
