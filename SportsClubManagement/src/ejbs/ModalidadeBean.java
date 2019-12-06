@@ -1,12 +1,16 @@
 package ejbs;
 
+import entities.Atleta;
+import entities.Escaloes;
 import entities.Modalidade;
+import entities.Treinador;
 
 import javax.ejb.EJBException;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.List;
+import java.util.Set;
 
 @Stateless(name = "ModalidadeEJB")
 public class ModalidadeBean {
@@ -30,7 +34,7 @@ public class ModalidadeBean {
         }
     }
 
-    public Modalidade findModalidade(String nome) {
+    public Modalidade findModalidade(String nome, Set<Treinador> treinadores, Set<Escaloes> escaloes, Set<Atleta> atletas) {
         try{
             return entityManager.find(Modalidade.class, nome);
         } catch (Exception e) {
