@@ -27,7 +27,15 @@ public class AdministradorBean {
             // remember, maps to: “SELECT s FROM Student s ORDER BY s.name”
             return (List<Administrador>) entityManager.createNamedQuery("getAllAdministradores").getResultList();
         } catch (Exception e) {
-            throw new EJBException("ERROR_RETRIEVING_STUDENTS", e);
+            throw new EJBException("ERROR_A_RECEBER_ADMINISTRADORES", e);
+        }
+    }
+
+    public Administrador findAdmin(String username) {
+        try{
+            return entityManager.find(Administrador.class, username);
+        } catch (Exception e) {
+            throw new EJBException("ERRO_A_ENCONTRAR_ADMINISTRADOR", e);
         }
     }
 }

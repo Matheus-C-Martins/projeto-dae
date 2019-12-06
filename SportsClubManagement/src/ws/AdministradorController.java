@@ -6,11 +6,9 @@ import entities.Administrador;
 
 import javax.ejb.EJB;
 import javax.ejb.EJBException;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -41,6 +39,25 @@ public class AdministradorController {
             return toDTOs(administradorBean.all());
         } catch (Exception e) {
             throw new EJBException("ERROR_GET_ADMINISTRADORES", e);
+        }
+    }
+
+    @POST
+    @Path("/")
+    public Response createNewAdmin (AdministradorDTO administradorDTO){
+        try{
+            administradorBean.create(administradorDTO.getUsername(),
+                    administradorDTO.getPassword(),
+                    administradorDTO.getNome(),
+                    administradorDTO.getEmail());
+            Administrador newAdmin = administradorBean.findAdmin(administradorDTO.getUsername());
+            if(newAdmin!=null)
+                return Response.status(Response.Status.CREATED)
+                        .entity(toDTO(newAdmin))
+                        .build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        }catch (Exception e) {
+            throw new EJBException("ERRO_AO_CRIAR_ADMINISTRADOR", e);
         }
     }
 }

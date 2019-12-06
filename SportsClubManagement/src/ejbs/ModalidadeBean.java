@@ -1,6 +1,5 @@
 package ejbs;
 
-import entities.Administrador;
 import entities.Modalidade;
 
 import javax.ejb.EJBException;
@@ -27,7 +26,15 @@ public class ModalidadeBean {
         try {
             return (List<Modalidade>) entityManager.createNamedQuery("getAllModalidades").getResultList();
         } catch (Exception e) {
-            throw new EJBException("ERROR_RETRIEVING_MODALIDADES", e);
+            throw new EJBException("ERRO_A_RECEBER_MODALIDADES", e);
+        }
+    }
+
+    public Modalidade findModalidade(String nome) {
+        try{
+            return entityManager.find(Modalidade.class, nome);
+        } catch (Exception e) {
+            throw new EJBException("ERRO_A_ENCONTRAR_MODALIDADE", e);
         }
     }
 }

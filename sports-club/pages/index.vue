@@ -1,22 +1,16 @@
 <template>
   <b-container>
-    <b-table :items="administradores" :fields="fields" striped over />
+    <nuxt-link to="/administradores">Administradores</nuxt-link>
+    <br>
+    <nuxt-link to="/modalidades">Modalidades</nuxt-link>
   </b-container>
 </template>
+
 <script>
 export default {
-  data () {
-    return {
-      fields: ['username', 'nome', 'email'],
-      administradores: []
-    }
-  },
-  created () {
-    this.$axios.$get('/api/administradores').then((administradores) => {
-      this.administradores = administradores
-    })
-  }
 }
 </script>
+
 <style>
+
 </style>
