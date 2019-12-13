@@ -9,6 +9,7 @@ import javax.ejb.EJBException;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.security.Principal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -42,6 +43,28 @@ public class AdministradorController {
         }
     }
 
+    @GET
+    @Path("{username}")
+    public Response getAdminDetails(@PathParam("username") String username) {
+        String msg;
+        try {
+            Administrador administrador = administradorBean.findAdmin(username);
+            if (administrador != null) {
+                return Response.status(Response.Status.OK)
+                        .entity(toDTO(administrador))
+                        .build();
+            }
+            msg = "ERRO_A_ENCONTRAR_ADMINISTRADOR";
+            System.err.println(msg);
+        } catch (Exception e) {
+            msg = "ERRO_AO_ADQUIRUIR_OS_DETALHES_DO_ADMINISTRADOR --->" + e.getMessage();
+            System.err.println(msg);
+        }
+        return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                .entity(msg)
+                .build();
+    }
+
     @POST
     @Path("/")
     public Response createNewAdmin (AdministradorDTO administradorDTO){
@@ -58,6 +81,39 @@ public class AdministradorController {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }catch (Exception e) {
             throw new EJBException("ERRO_AO_CRIAR_ADMINISTRADOR", e);
+        }
+    }
+
+    @PUT
+    @Path("{username}")
+    public Response updateAdmin(@PathParam("username") String username, AdministradorDTO administradorDTO) {
+        try {
+            Administrador admin = administradorBean.findAdmin(username);
+            if (admin != null) {
+                administradorBean.updateAdmin(username, administradorDTO.getPassword(), administradorDTO.getNome(), administradorDTO.getEmail());
+                return Response.status(Response.Status.OK)
+                        .entity(toDTO(admin))
+                        .build();
+            }
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        } catch (Exception e) {
+            throw new EJBException("ERRO_A_ATUALIZAR_ADMINISTRADOR", e);
+        }
+    }
+
+    @DELETE
+    @Path("{username}")
+    public Response removeAdmin(@PathParam("username") String username) {
+        try {
+            Administrador student = administradorBean.findAdmin(username);
+            if (student != null) {
+                administradorBean.removeAdmin(username);
+                return Response.status(Response.Status.OK)
+                        .build();
+            }
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        } catch (Exception e) {
+            throw new EJBException("ERRO_A_REMOVER_AMDMINISTRADOR", e);
         }
     }
 }

@@ -6,11 +6,9 @@ import entities.Modalidade;
 
 import javax.ejb.EJB;
 import javax.ejb.EJBException;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -38,6 +36,25 @@ public class ModalidadeController {
             return toDTOs(modalidadeBean.all());
         } catch (Exception e) {
             throw new EJBException("ERROR_GET_MODALIDADES", e);
+        }
+    }
+
+    @POST
+    @Path("/")
+    public Response createNewModalidade (ModalidadeDTO modalidadeDTO){
+        try{
+            modalidadeBean.create(modalidadeDTO.getNome());
+            Modalidade newModalidade = modalidadeBean.findModalidade(modalidadeDTO.getNome(),
+                    modalidadeDTO.getTreinadores(),
+                    modalidadeDTO.getEscaloes(),
+                    modalidadeDTO.getAtletas());
+            if(newModalidade!=null)
+                return Response.status(Response.Status.CREATED)
+                        .entity(toDTO(newModalidade))
+                        .build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        }catch (Exception e) {
+            throw new EJBException("ERRO_AO_CRIAR_MODALIDADE", e);
         }
     }
 }
