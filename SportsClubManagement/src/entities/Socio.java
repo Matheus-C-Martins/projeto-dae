@@ -1,9 +1,17 @@
 package entities;
 
 import javax.persistence.Entity;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import java.io.Serializable;
 
 @Entity
+@NamedQueries({
+        @NamedQuery(
+                name="getAllSocios",
+                query = "SELECT s FROM Socio s ORDER BY s.name"
+        )
+})
 public class Socio extends User implements Serializable {
     //Mensagens
     //Graduacoes

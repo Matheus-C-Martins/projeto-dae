@@ -1,4 +1,96 @@
 package ws;
 
+import dtos.SocioDTO;
+import ejbs.SocioBean;
+import entities.Socio;
+
+import javax.ejb.EJB;
+import javax.ejb.EJBException;
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import java.util.List;
+import java.util.stream.Collectors;
+
+@Path("/socios")
+@Produces({MediaType.APPLICATION_JSON})
+@Consumes({MediaType.APPLICATION_JSON})
 public class SocioController {
+    @EJB
+    private SocioBean socioBean;
+
+    SocioDTO toDTO(Socio socio) {
+        return new SocioDTO(
+                socio.getUsername(),
+                socio.getPassword(),
+                socio.getName(),
+                socio.getEmail()
+        );
+    }
+
+    List<SocioDTO> toDTOs(List<Socio> socios) {
+        return socios.stream().map(this::toDTO).collect(Collectors.toList());
+    }
+
+    @GET
+    @Path("/")
+    public List<SocioDTO> all() {
+        try {
+            return toDTOs(socioBean.all());
+        } catch (Exception e) {
+            throw new EJBException("ERRO AO OBTER SOCIOS");
+        }
+    }
+
+    @GET
+    @Path("{username}")
+    public Response getSocioDetails(@PathParam("username") String username) {
+        Socio socio = socioBean.findSocio(username);
+
+        return Response.status(Response.Status.OK).entity(toDTO(socio)).build();
+    }
+
+    @POST
+    @Path("/")
+    public Response createNewSocio(SocioDTO socioDTO) {
+        try {
+            socioBean.create(
+                    socioDTO.getUsername(),
+                    socioDTO.getPassword(),
+                    socioDTO.getNome(),
+                    socioDTO.getEmail()
+            );
+
+            Socio newSocio = socioBean.findSocio(socioDTO.getUsername());
+            if (newSocio != null) {
+                return Response.status(Response.Status.CREATED).entity(toDTO(newSocio)).build();
+            }
+
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        } catch (Exception e) {
+            throw new EJBException("ERRO AO CRIAR SOCIO", e);
+        }
+    }
+
+    @PUT
+    @Path("{username}")
+    public Response updateSocio(@PathParam("username") String username, String newUsername, String password, String name, String email) {
+        try {
+            socioBean.updateSocio(username, newUsername, password, name, email);
+            return Response.status(Response.Status.OK).build();
+        } catch (Exception e) {
+            throw new EJBException("ERRO AO ACTUALIZAR SOCIO COM O USERNAME " + username + "!", e);
+        }
+    }
+
+    @DELETE
+    @Path("{username}")
+    public Response deleteSocio(@PathParam("username") String username) {
+        try {
+            socioBean.removeSocio(username);
+            return Response.status(Response.Status.OK).build();
+        } catch (Exception e) {
+            throw new EJBException("ERRO AO ELIMINAR O SOCIO COM O USERNAME " + username + "!");
+        }
+    }
 }
