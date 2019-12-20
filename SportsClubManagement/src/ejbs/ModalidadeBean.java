@@ -21,6 +21,15 @@ public class ModalidadeBean {
     ModalidadeDTO modalidadeDTO;
 
 
+    public void create(String nome){
+        try {
+            Modalidade a = new Modalidade(nome);
+            entityManager.persist(a);
+        }catch (Exception e){
+            throw new EJBException(e);
+        }
+    }
+
     public void create(String nome, Set<Treinador> treinadores, Set<Escaloes> escaloes, Set<Atleta> atletas){
         try {
             Modalidade a = new Modalidade(nome, treinadores, atletas, escaloes);

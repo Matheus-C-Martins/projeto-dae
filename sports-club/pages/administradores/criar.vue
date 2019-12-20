@@ -1,3 +1,4 @@
+<!-- eslint-disable -->
 <template>
   <form @submit.prevent="create">
     <div>

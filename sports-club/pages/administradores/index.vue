@@ -1,3 +1,4 @@
+<!-- eslint-disable -->
 <template>
   <v-app id='inspire'>
     <v-data-table
@@ -17,16 +18,17 @@
           <v-toolbar-title>Administradores</v-toolbar-title>
           <v-divider class='mx-4' inset vertical></v-divider>
           <v-spacer></v-spacer>
+          <v-dialog v-model="dialogEdit" max-width='500px'>
+            <edit-admin @close="closeEdit" :administrador="editedItem" :title="formTitle"></edit-admin>
+          </v-dialog>
           <v-dialog v-model='dialog' max-width='500px'>
             <template v-slot:activator='{ on }'>
               <v-btn color='primary' dark class='mb-2' v-on='on'>Criar Administrador</v-btn>
             </template>
             <v-card>
-              <v-card-title>
-                <span class='headline'>{{ formTitle }}</span>
-              </v-card-title>
-              <v-card-text>
-                <v-container>
+              <v-card-title class="headline"> {{ formTitle }} </v-card-title>
+              <v-card-text class="pa-0">
+                <v-container style="padding-bottom: 0px; padding-top: 0px;">
                   <v-row dense>
                     <v-col>
                       <v-text-field
@@ -82,7 +84,7 @@
                   </v-row>
                 </v-container>
               </v-card-text>
-              <v-card-actions>
+              <v-card-actions style="padding-top: 0px">
                 <v-spacer></v-spacer>
                 <v-btn color='blue darken-1' text @click='close'>Cancelar</v-btn>
                 <v-btn color='blue darken-1' text @click='save'>Criar</v-btn>
@@ -91,15 +93,27 @@
           </v-dialog>
         </v-toolbar>
       </template>
+      <template v-slot:item.action="{ item }">
+        <v-icon small class="mr-2" @click="editItem(item)"> {{ icons.mdiPencil }} </v-icon>
+        <v-icon small @click="deleteItem(item)"> {{ icons.mdiDelete }} </v-icon>
+      </template>
     </v-data-table>
+    <v-footer color = "white" style="padding-top: 0px;">
+      <v-btn color='primary' dark @click='back'> Voltar </v-btn>
+    </v-footer>
   </v-app>
 </template>
 <script>
 import { validationMixin } from 'vuelidate'
 import { required, maxLength, minLength, email } from 'vuelidate/lib/validators'
+import { mdiPencil, mdiDelete } from '@mdi/js'
+import EditarAdmin from './editar'
 
 export default {
   /* eslint-disable */
+  components: {
+    "edit-admin": EditarAdmin,
+  },
   mixins: [validationMixin],
   validations: {
     editedItem: {
@@ -114,13 +128,19 @@ export default {
       loading: true,
       valid: true,
       value: true,
+      icons: {
+        mdiPencil,
+        mdiDelete
+      },
       headers: [
         { text: 'Username', value: 'username', align: 'center', sortable: false },
         { text: 'Nome', value: 'nome', align: 'center', sortable: false },
-        { text: 'Email', value: 'email', align: 'center', sortable: false }
+        { text: 'Email', value: 'email', align: 'center', sortable: false },
+        { text: 'Actions', value: 'action', sortable: false }
       ],
       administradores: [],
       dialog: false,
+      dialogEdit: false,
       editedIndex: -1,
       editedItem: {
         username: '',
@@ -172,6 +192,9 @@ export default {
   watch: {
     dialog (val) {
       val || this.close()
+    },
+    dialogEdit (val) {
+      val || this.close()
     }
   },
   created () {
@@ -184,8 +207,28 @@ export default {
         this.loading = false
       })
     },
+    editItem (item) {
+      this.editedIndex = this.administradores.indexOf(item)
+      this.editedItem = Object.assign({}, item)
+      this.dialogEdit = true
+    },
+    deleteItem (item) {
+      const index = this.administradores.indexOf(item)
+      confirm('Are you sure you want to delete this item?') && this.administradores.splice(index, 1)
+    },
+    back () {
+      this.$router.push('/')
+    },
     close () {
       this.dialog = false
+      setTimeout(() => {
+        this.editedItem = Object.assign({}, this.defaultItem)
+        this.editedIndex = -1
+      }, 300)
+    },
+    closeEdit () {
+      this.dialogEdit = false
+      this.getAdmins()
       setTimeout(() => {
         this.editedItem = Object.assign({}, this.defaultItem)
         this.editedIndex = -1
@@ -196,19 +239,24 @@ export default {
         Object.assign(this.administradores[this.editedIndex], this.editedItem)
       } else {
         this.$v.$touch()
+        console.log(this.formTitle)
         if (this.$v.$error) {
           return
         }
-        this.$axios.$post('/api/administradores', {
+        if (this.formTitle === 'Novo Administrador') {
+          this.$axios.$post('/api/administradores', {
           username: this.editedItem.username,
           password: this.editedItem.password,
           nome: this.editedItem.nome,
           email: this.editedItem.email
-        })
-          .then(() => {
-            this.loading = true
-            this.getAdmins()
           })
+            .then(() => {
+              this.loading = true
+              this.getAdmins()
+            })
+        } else if (this.formTitle === 'Editar Administrador') {
+
+        }        
       }
       this.close()
     }
