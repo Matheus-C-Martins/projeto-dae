@@ -1,32 +1,217 @@
 <template>
-  <b-container>
-    <b-table :items="administradores" :fields="fields" striped over>
-        <template v-slot:cell(editar)="row">
-        <button>
-          <nuxt-link class="btn-link" :to="`/administradores/${row.item.username}/editar`">Editar</nuxt-link>
-        </button>
+  <v-app id='inspire'>
+    <v-data-table
+      :loading='loading'
+      loading-text='A carregar administradores... Aguarde um momento'
+      item-key='username'
+      expand-icon
+      :headers='headers'
+      :items='administradores'
+      :items-per-page='10'
+      multi-sort
+      class='elevation-1'
+      no-data-text='Não existem administradores'
+    >
+      <template v-slot:top>
+        <v-toolbar flat color='white'>
+          <v-toolbar-title>Administradores</v-toolbar-title>
+          <v-divider class='mx-4' inset vertical></v-divider>
+          <v-spacer></v-spacer>
+          <v-dialog v-model='dialog' max-width='500px'>
+            <template v-slot:activator='{ on }'>
+              <v-btn color='primary' dark class='mb-2' v-on='on'>Criar Administrador</v-btn>
+            </template>
+            <v-card>
+              <v-card-title>
+                <span class='headline'>{{ formTitle }}</span>
+              </v-card-title>
+              <v-card-text>
+                <v-container>
+                  <v-row dense>
+                    <v-col>
+                      <v-text-field
+                        v-model='editedItem.username'
+                        label='Username'
+                        :error-messages="usernameErrors"
+                        outlined
+                        dense
+                        @input="$v.editedItem.username.$touch()"
+                        @blur="$v.editedItem.username.$touch()">
+                      </v-text-field>
+                    </v-col>
+                    <v-col>
+                      <v-text-field
+                      v-model='editedItem.nome'
+                      label='Nome'
+                      :error-messages="nomeErrors"
+                      outlined
+                      dense
+                      @input="$v.editedItem.nome.$touch()"
+                      @blur="$v.editedItem.nome.$touch()">
+                      </v-text-field>
+                    </v-col>
+                  </v-row>
+                  <v-row dense>
+                    <v-col>
+                      <v-text-field
+                        v-model="editedItem.email"
+                        label='Email Address'
+                        :error-messages="emailErrors"
+                        outlined
+                        dense
+                        required
+                        @input="$v.editedItem.email.$touch()"
+                        @blur="$v.editedItem.email.$touch()"
+                      ></v-text-field>
+                    </v-col>
+                    <v-col>
+                      <v-text-field
+                        v-model='editedItem.password'
+                        :value="editedItem.password"
+                        label='Password'
+                        :append-icon="value ? 'mdi-eye' : 'mdi-eye-off'"
+                        @click:append='() => (value = !value)'
+                        :type="value ? 'password' : 'text'"
+                        :error-messages="passwordErrors"
+                        outlined
+                        dense
+                        @input="$v.editedItem.password.$touch()"
+                        @blur="$v.editedItem.password.$touch()"
+                      ></v-text-field>
+                    </v-col>
+                  </v-row>
+                </v-container>
+              </v-card-text>
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn color='blue darken-1' text @click='close'>Cancelar</v-btn>
+                <v-btn color='blue darken-1' text @click='save'>Criar</v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
+        </v-toolbar>
       </template>
-      <template v-slot:cell(remover)="row">
-        <button>
-          <nuxt-link class="btn-link" :to="`/administradores/${row.item.username}/remover`">Remover</nuxt-link>
-        </button>
-      </template>
-    </b-table>
-    <nuxt-link to="/administradores/criar">Criar novo administrador</nuxt-link>
-  </b-container>
+    </v-data-table>
+  </v-app>
 </template>
 <script>
+import { validationMixin } from 'vuelidate'
+import { required, maxLength, minLength, email } from 'vuelidate/lib/validators'
+
 export default {
+  /* eslint-disable */
+  mixins: [validationMixin],
+  validations: {
+    editedItem: {
+      nome: { required, maxLength: maxLength(25) },
+      username: { required, maxLength: maxLength(10) },
+      email: { required, email },
+      password: { required, minLength: minLength(3) }
+    }
+  },
   data () {
     return {
-      fields: ['username', 'nome', 'email', 'editar', 'remover'],
-      administradores: []
+      loading: true,
+      valid: true,
+      value: true,
+      headers: [
+        { text: 'Username', value: 'username', align: 'center', sortable: false },
+        { text: 'Nome', value: 'nome', align: 'center', sortable: false },
+        { text: 'Email', value: 'email', align: 'center', sortable: false }
+      ],
+      administradores: [],
+      dialog: false,
+      editedIndex: -1,
+      editedItem: {
+        username: '',
+        nome: '',
+        email: '',
+        password: ''
+      },
+      defaultItem: {
+        username: '',
+        nome: '',
+        email: '',
+        password: ''
+      }
+    }
+  },
+  computed: {
+    formTitle () {
+      return this.editedIndex === -1 ? 'Novo Administrador' : 'Editar Administrador'
+    },
+    nomeErrors () {
+      const errors = []
+      if (!this.$v.editedItem.nome.$dirty) { return errors }
+      !this.$v.editedItem.nome.maxLength && errors.push('Name must be at most 25 characters long.')
+      !this.$v.editedItem.nome.required && errors.push('Name is required.')
+      return errors
+    },
+    usernameErrors () {
+      const errors = []
+      if (!this.$v.editedItem.username.$dirty) { return errors }
+      !this.$v.editedItem.username.maxLength && errors.push('Username must be at most 10 characters long.')
+      !this.$v.editedItem.username.required && errors.push('Username is required.')
+      return errors
+    },
+    passwordErrors () {
+      const errors = []
+      if (!this.$v.editedItem.password.$dirty) { return errors }
+      !this.$v.editedItem.password.minLength && errors.push('Password must have a minimum of 3 characters.')
+      !this.$v.editedItem.password.required && errors.push('Password is required.')
+      return errors
+    },
+    emailErrors () {
+      const errors = []
+      if (!this.$v.editedItem.email.$dirty) { return errors }
+      !this.$v.editedItem.email.email && errors.push('Must be valid e-mail.')
+      !this.$v.editedItem.email.required && errors.push('E-mail is required.')
+      return errors
+    }
+  },
+  watch: {
+    dialog (val) {
+      val || this.close()
     }
   },
   created () {
-    this.$axios.$get('/api/administradores').then((administradores) => {
-      this.administradores = administradores
-    })
+    this.getAdmins()
+  },
+  methods: {
+    getAdmins () {
+      this.$axios.$get('/api/administradores').then((administradores) => {
+        this.administradores = administradores
+        this.loading = false
+      })
+    },
+    close () {
+      this.dialog = false
+      setTimeout(() => {
+        this.editedItem = Object.assign({}, this.defaultItem)
+        this.editedIndex = -1
+      }, 300)
+    },
+    save () {
+      if (this.editedIndex > -1) {
+        Object.assign(this.administradores[this.editedIndex], this.editedItem)
+      } else {
+        this.$v.$touch()
+        if (this.$v.$error) {
+          return
+        }
+        this.$axios.$post('/api/administradores', {
+          username: this.editedItem.username,
+          password: this.editedItem.password,
+          nome: this.editedItem.nome,
+          email: this.editedItem.email
+        })
+          .then(() => {
+            this.loading = true
+            this.getAdmins()
+          })
+      }
+      this.close()
+    }
   }
 }
 </script>

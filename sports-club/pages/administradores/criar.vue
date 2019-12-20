@@ -16,9 +16,9 @@
       Email:
       <input v-model="email" type="email" />
     </div>
-    <nuxt-link to="/administradores">Return</nuxt-link>
-    <button type="reset">RESET</button>
-    <button @click.prevent="create">CRIAR</button>
+    <nuxt-link to="/administradores"> Return </nuxt-link>
+    <button type="reset"> RESET </button>
+    <button @click.prevent="create"> CRIAR </button>
   </form>
 </template>
 
