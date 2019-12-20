@@ -46,6 +46,13 @@ public class Modalidade implements Serializable {
         this.escaloes = new HashSet<>();
     }
 
+    public Modalidade(String nome, Set<Treinador> treinadores, Set<Atleta> atletas, Set<Escaloes> escaloes) {
+        this.nome = nome;
+        this.treinadores = treinadores;
+        this.atletas = atletas;
+        this.escaloes = escaloes;
+    }
+
     public void setNome(String nome) {
         this.nome = nome;
     }

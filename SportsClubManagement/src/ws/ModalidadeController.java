@@ -43,11 +43,10 @@ public class ModalidadeController {
     @Path("/")
     public Response createNewModalidade (ModalidadeDTO modalidadeDTO){
         try{
-            modalidadeBean.create(modalidadeDTO.getNome());
-            Modalidade newModalidade = modalidadeBean.findModalidade(modalidadeDTO.getNome(),
-                    modalidadeDTO.getTreinadores(),
+            modalidadeBean.create(modalidadeDTO.getNome(),modalidadeDTO.getTreinadores(),
                     modalidadeDTO.getEscaloes(),
                     modalidadeDTO.getAtletas());
+            Modalidade newModalidade = modalidadeBean.findModalidade(modalidadeDTO.getNome());
             if(newModalidade!=null)
                 return Response.status(Response.Status.CREATED)
                         .entity(toDTO(newModalidade))
@@ -55,6 +54,39 @@ public class ModalidadeController {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }catch (Exception e) {
             throw new EJBException("ERRO_AO_CRIAR_MODALIDADE", e);
+        }
+    }
+
+    @PUT
+    @Path("{nome}")
+    public Response updateModalidade(@PathParam("nome") String nome, ModalidadeDTO modalidadeDTO) {
+        try {
+            Modalidade modalidade = modalidadeBean.findModalidade(nome);
+            if (modalidade != null) {
+                modalidadeBean.updateModalidade(nome, modalidadeDTO.getTreinadores(), modalidadeDTO.getEscaloes(), modalidadeDTO.getAtletas());
+                return Response.status(Response.Status.OK)
+                        .entity(toDTO(modalidade))
+                        .build();
+            }
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        } catch (Exception e) {
+            throw new EJBException("ERRO_A_ATUALIZAR_MODALIDADE", e);
+        }
+    }
+
+    @DELETE
+    @Path("{nome}")
+    public Response removeAdmin(@PathParam("nome") String nome) {
+        try {
+            Modalidade modalidade = modalidadeBean.findModalidade(nome);
+            if (modalidade != null) {
+                modalidadeBean.removeModalidade(nome);
+                return Response.status(Response.Status.OK)
+                        .build();
+            }
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        } catch (Exception e) {
+            throw new EJBException("ERRO_A_REMOVER_MODALIDADE", e);
         }
     }
 }
