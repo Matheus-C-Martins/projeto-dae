@@ -14,6 +14,9 @@ public class ConfigBean {
     @EJB
     ModalidadeBean modalidadeBean;
 
+    @EJB
+    SocioBean socioBean;
+
     @PostConstruct
     public void populateDB() {
         try {
@@ -28,6 +31,11 @@ public class ConfigBean {
             modalidadeBean.create("Natação");
             modalidadeBean.create("Voleibol");
             modalidadeBean.create("Ginástica");
+            System.out.println("OK");
+
+            System.out.print("A Inserir Administradores na Bade Dados...");
+            socioBean.create("2171316", "1234", "Matheus Martins", "2171316@my.ipleiria.pt");
+            socioBean.create("9999999", "1234", "Sócio", "9999999@my.ipleiria.pt");
             System.out.println("OK");
         } catch (Exception e) {
             System.out.println(e.getMessage());

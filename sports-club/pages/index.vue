@@ -5,6 +5,8 @@
       <nuxt-link to="/administradores">Administradores</nuxt-link>
       <br />
       <nuxt-link to="/modalidades">Modalidades</nuxt-link>
+      <br />
+      <nuxt-link to="/socios">Sócios</nuxt-link>
     </b-container>
   </div>
 </template>

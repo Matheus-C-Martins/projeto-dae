@@ -7,7 +7,7 @@
         <v-row dense>
           <v-col>
             <v-text-field
-              v-model='administrador.username'
+              v-model='socio.username'
               label='Username'
               outlined
               dense
@@ -16,7 +16,7 @@
           </v-col>
           <v-col>
             <v-text-field
-              v-model='administrador.nome'
+              v-model='socio.nome'
               label='Nome'
               outlined
               dense>
@@ -26,7 +26,7 @@
         <v-row dense>
           <v-col>
             <v-text-field
-              v-model='administrador.email'
+              v-model='socio.email'
               label='Email Adress'
               outlined
               dense>
@@ -56,7 +56,7 @@ export default {
   /* eslint-disable */
   props: [
     'title',
-    'administrador'
+    'socio'
   ],
   data () {
     return {
@@ -70,19 +70,19 @@ export default {
     edit () {
       if (this.password !== '') {
         console.log(this.password)
-        this.$axios.$put(`/api/administradores/${this.administrador.username}`, {
+        this.$axios.$put(`/api/socios/${this.socio.username}`, {
           password: this.password,
-          nome: this.administrador.nome,
-          email: this.administrador.email
+          nome: this.socio.nome,
+          email: this.socio.email
         })
           .then(() => {
             this.close()
           })
       } else {
-        this.$axios.$put(`/api/administradores/${this.administrador.username}`, {
+        this.$axios.$put(`/api/socios/${this.socio.username}`, {
           password: null,
-          nome: this.administrador.nome,
-          email: this.administrador.email
+          nome: this.socio.nome,
+          email: this.socio.email
         })
           .then(() => {
             this.close()

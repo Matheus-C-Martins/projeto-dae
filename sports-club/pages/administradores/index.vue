@@ -1,106 +1,114 @@
 <!-- eslint-disable -->
 <template>
   <v-app id='inspire'>
-    <v-data-table
-      :loading='loading'
-      loading-text='A carregar administradores... Aguarde um momento'
-      item-key='username'
-      expand-icon
-      :headers='headers'
-      :items='administradores'
-      :items-per-page='10'
-      multi-sort
-      class='elevation-1'
-      no-data-text='Não existem administradores'
-    >
-      <template v-slot:top>
-        <v-toolbar flat color='white'>
-          <v-toolbar-title>Administradores</v-toolbar-title>
-          <v-divider class='mx-4' inset vertical></v-divider>
-          <v-spacer></v-spacer>
-          <v-dialog v-model="dialogEdit" max-width='500px'>
-            <edit-admin @close="closeEdit" :administrador="editedItem" :title="formTitle"></edit-admin>
-          </v-dialog>
-          <v-dialog v-model='dialog' max-width='500px'>
-            <template v-slot:activator='{ on }'>
-              <v-btn color='primary' dark class='mb-2' v-on='on'>Criar Administrador</v-btn>
-            </template>
-            <v-card>
-              <v-card-title class="headline"> {{ formTitle }} </v-card-title>
-              <v-card-text class="pa-0">
-                <v-container style="padding-bottom: 0px; padding-top: 0px;">
-                  <v-row dense>
-                    <v-col>
-                      <v-text-field
-                        v-model='editedItem.username'
-                        label='Username'
-                        :error-messages="usernameErrors"
+    <v-card>
+      <v-data-table
+        :loading='loading'
+        loading-text='A carregar administradores... Aguarde um momento'
+        item-key='username'
+        expand-icon
+        :headers='headers'
+        :items='administradores'
+        class='elevation-1'
+        no-data-text='Não existem administradores'
+        :search="search"
+      >
+        <template v-slot:top>
+          <v-toolbar flat color='white'>
+            <v-toolbar-title>Administradores</v-toolbar-title>
+            <v-divider class='mx-4' inset vertical></v-divider>
+            <v-text-field
+              v-model="search"
+              label="Procurar por Email"
+              hide-details
+              outlined
+              dense
+            ></v-text-field>
+            <v-spacer></v-spacer>
+            <v-dialog v-model="dialogEdit" max-width='500px'>
+              <edit-admin @close="closeEdit" :administrador="editedItem" :title="formTitle"></edit-admin>
+            </v-dialog>
+            <v-dialog v-model='dialog' max-width='500px'>
+              <template v-slot:activator='{ on }'>
+                <v-btn color='primary' dark class='mb-2' v-on='on'>Criar Administrador</v-btn>
+              </template>
+              <v-card>
+                <v-card-title class="headline"> {{ formTitle }} </v-card-title>
+                <v-card-text class="pa-0">
+                  <v-container style="padding-bottom: 0px; padding-top: 0px;">
+                    <v-row dense>
+                      <v-col>
+                        <v-text-field
+                          v-model='editedItem.username'
+                          label='Username'
+                          :error-messages="usernameErrors"
+                          outlined
+                          dense
+                          @input="$v.editedItem.username.$touch()"
+                          @blur="$v.editedItem.username.$touch()">
+                        </v-text-field>
+                      </v-col>
+                      <v-col>
+                        <v-text-field
+                        v-model='editedItem.nome'
+                        label='Nome'
+                        :error-messages="nomeErrors"
                         outlined
                         dense
-                        @input="$v.editedItem.username.$touch()"
-                        @blur="$v.editedItem.username.$touch()">
-                      </v-text-field>
-                    </v-col>
-                    <v-col>
-                      <v-text-field
-                      v-model='editedItem.nome'
-                      label='Nome'
-                      :error-messages="nomeErrors"
-                      outlined
-                      dense
-                      @input="$v.editedItem.nome.$touch()"
-                      @blur="$v.editedItem.nome.$touch()">
-                      </v-text-field>
-                    </v-col>
-                  </v-row>
-                  <v-row dense>
-                    <v-col>
-                      <v-text-field
-                        v-model="editedItem.email"
-                        label='Email Address'
-                        :error-messages="emailErrors"
-                        outlined
-                        dense
-                        required
-                        @input="$v.editedItem.email.$touch()"
-                        @blur="$v.editedItem.email.$touch()"
-                      ></v-text-field>
-                    </v-col>
-                    <v-col>
-                      <v-text-field
-                        v-model='editedItem.password'
-                        :value="editedItem.password"
-                        label='Password'
-                        :append-icon="value ? 'mdi-eye' : 'mdi-eye-off'"
-                        @click:append='() => (value = !value)'
-                        :type="value ? 'password' : 'text'"
-                        :error-messages="passwordErrors"
-                        outlined
-                        dense
-                        @input="$v.editedItem.password.$touch()"
-                        @blur="$v.editedItem.password.$touch()"
-                      ></v-text-field>
-                    </v-col>
-                  </v-row>
-                </v-container>
-              </v-card-text>
-              <v-card-actions style="padding-top: 0px">
-                <v-spacer></v-spacer>
-                <v-btn color='blue darken-1' text @click='close'>Cancelar</v-btn>
-                <v-btn color='blue darken-1' text @click='save'>Criar</v-btn>
-              </v-card-actions>
-            </v-card>
-          </v-dialog>
-        </v-toolbar>
-      </template>
-      <template v-slot:item.action="{ item }">
-        <v-icon small class="mr-2" @click="editItem(item)"> {{ icons.mdiPencil }} </v-icon>
-        <v-icon small @click="deleteItem(item)"> {{ icons.mdiDelete }} </v-icon>
-      </template>
-    </v-data-table>
-    <v-footer color = "white" style="padding-top: 0px;">
-      <v-btn color='primary' dark @click='back'> Voltar </v-btn>
-    </v-footer>
+                        @input="$v.editedItem.nome.$touch()"
+                        @blur="$v.editedItem.nome.$touch()">
+                        </v-text-field>
+                      </v-col>
+                    </v-row>
+                    <v-row dense>
+                      <v-col>
+                        <v-text-field
+                          v-model="editedItem.email"
+                          label='Email Address'
+                          :error-messages="emailErrors"
+                          outlined
+                          dense
+                          required
+                          @input="$v.editedItem.email.$touch()"
+                          @blur="$v.editedItem.email.$touch()"
+                        ></v-text-field>
+                      </v-col>
+                      <v-col>
+                        <v-text-field
+                          v-model='editedItem.password'
+                          :value="editedItem.password"
+                          label='Password'
+                          :append-icon="value ? 'mdi-eye' : 'mdi-eye-off'"
+                          @click:append='() => (value = !value)'
+                          :type="value ? 'password' : 'text'"
+                          :error-messages="passwordErrors"
+                          outlined
+                          dense
+                          @input="$v.editedItem.password.$touch()"
+                          @blur="$v.editedItem.password.$touch()"
+                        ></v-text-field>
+                      </v-col>
+                    </v-row>
+                  </v-container>
+                </v-card-text>
+                <v-card-actions style="padding-top: 0px">
+                  <v-spacer></v-spacer>
+                  <v-btn color='blue darken-1' text @click='close'>Cancelar</v-btn>
+                  <v-btn color='blue darken-1' text @click='save'>Criar</v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
+          </v-toolbar>
+        </template>
+        <template v-slot:item.action="{ item }">
+          <v-icon small class="mr-2" @click="editItem(item)"> {{ icons.mdiPencil }} </v-icon>
+          <v-icon small @click="deleteItem(item)"> {{ icons.mdiDelete }} </v-icon>
+        </template>
+      </v-data-table>
+      <v-footer color = "white" style="padding-top: 0px;">
+        <v-btn color='primary' dark @click='back'> Voltar </v-btn>
+      </v-footer>
+    </v-card>
   </v-app>
 </template>
 <script>
@@ -112,7 +120,7 @@ import EditarAdmin from './editar'
 export default {
   /* eslint-disable */
   components: {
-    "edit-admin": EditarAdmin,
+    'edit-admin': EditarAdmin
   },
   mixins: [validationMixin],
   validations: {
@@ -128,15 +136,16 @@ export default {
       loading: true,
       valid: true,
       value: true,
+      search: '',
       icons: {
         mdiPencil,
         mdiDelete
       },
       headers: [
-        { text: 'Username', value: 'username', align: 'center', sortable: false },
-        { text: 'Nome', value: 'nome', align: 'center', sortable: false },
+        { text: 'Username', value: 'username', align: 'center', sortable: false, filterable: false },
+        { text: 'Nome', value: 'nome', align: 'center', sortable: false, filterable: false },
         { text: 'Email', value: 'email', align: 'center', sortable: false },
-        { text: 'Actions', value: 'action', sortable: false }
+        { text: 'Actions', value: 'action', sortable: false, filterable: false }
       ],
       administradores: [],
       dialog: false,
@@ -213,8 +222,12 @@ export default {
       this.dialogEdit = true
     },
     deleteItem (item) {
-      const index = this.administradores.indexOf(item)
-      confirm('Are you sure you want to delete this item?') && this.administradores.splice(index, 1)
+      confirm(`Tem a certeza que pertende eliminar o Administrador: ${item.username}?`) &&
+      this.$axios.$delete(`/api/administradores/${item.username}`, {})
+        .then(() => {
+          this.loading = true
+          this.getAdmins()
+        })
     },
     back () {
       this.$router.push('/')
@@ -239,24 +252,21 @@ export default {
         Object.assign(this.administradores[this.editedIndex], this.editedItem)
       } else {
         this.$v.$touch()
-        console.log(this.formTitle)
         if (this.$v.$error) {
           return
         }
         if (this.formTitle === 'Novo Administrador') {
           this.$axios.$post('/api/administradores', {
-          username: this.editedItem.username,
-          password: this.editedItem.password,
-          nome: this.editedItem.nome,
-          email: this.editedItem.email
+            username: this.editedItem.username,
+            password: this.editedItem.password,
+            nome: this.editedItem.nome,
+            email: this.editedItem.email
           })
             .then(() => {
               this.loading = true
               this.getAdmins()
             })
-        } else if (this.formTitle === 'Editar Administrador') {
-
-        }        
+        }
       }
       this.close()
     }

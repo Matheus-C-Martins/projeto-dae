@@ -21,13 +21,12 @@ public class SocioController {
 
     SocioDTO toDTO(Socio socio) {
         return new SocioDTO(
-                socio.getUsername(),
-                socio.getPassword(),
-                socio.getName(),
-                socio.getEmail()
+            socio.getUsername(),
+            socio.getPassword(),
+            socio.getName(),
+            socio.getEmail()
         );
     }
-
     List<SocioDTO> toDTOs(List<Socio> socios) {
         return socios.stream().map(this::toDTO).collect(Collectors.toList());
     }
@@ -46,7 +45,6 @@ public class SocioController {
     @Path("{username}")
     public Response getSocioDetails(@PathParam("username") String username) {
         Socio socio = socioBean.findSocio(username);
-
         return Response.status(Response.Status.OK).entity(toDTO(socio)).build();
     }
 
@@ -58,15 +56,12 @@ public class SocioController {
                     socioDTO.getUsername(),
                     socioDTO.getPassword(),
                     socioDTO.getNome(),
-                    socioDTO.getEmail()
-            );
-
+                    socioDTO.getEmail());
             Socio newSocio = socioBean.findSocio(socioDTO.getUsername());
             if (newSocio != null) {
                 return Response.status(Response.Status.CREATED).entity(toDTO(newSocio)).build();
             }
-
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+            return Response.status(Response.Status.valueOf("Ocorreu um erro na criação do novo sócio!")).build();
         } catch (Exception e) {
             throw new EJBException("ERRO AO CRIAR SOCIO", e);
         }
@@ -74,10 +69,14 @@ public class SocioController {
 
     @PUT
     @Path("{username}")
-    public Response updateSocio(@PathParam("username") String username, String newUsername, String password, String name, String email) {
+    public Response updateSocio(@PathParam("username") String username, SocioDTO socioDTO) {
         try {
-            socioBean.updateSocio(username, newUsername, password, name, email);
-            return Response.status(Response.Status.OK).build();
+            Socio socio = socioBean.findSocio(username);
+            if (socio != null) {
+                socioBean.updateSocio(username, socioDTO.getNome(), socioDTO.getPassword(), socioDTO.getEmail());
+                return Response.status(Response.Status.OK).build();
+            }
+            return Response.status(Response.Status.valueOf("Sócio com o username: '"+ username +"' não existe!")).build();
         } catch (Exception e) {
             throw new EJBException("ERRO AO ACTUALIZAR SOCIO COM O USERNAME " + username + "!", e);
         }
@@ -87,8 +86,12 @@ public class SocioController {
     @Path("{username}")
     public Response deleteSocio(@PathParam("username") String username) {
         try {
-            socioBean.removeSocio(username);
-            return Response.status(Response.Status.OK).build();
+            Socio socio = socioBean.findSocio(username);
+            if (socio != null) {
+                socioBean.removeSocio(username);
+                return Response.status(Response.Status.OK).build();
+            }
+            return Response.status(Response.Status.valueOf("Sócio com o username: '"+ username +"' não existe!")).build();
         } catch (Exception e) {
             throw new EJBException("ERRO AO ELIMINAR O SOCIO COM O USERNAME " + username + "!");
         }

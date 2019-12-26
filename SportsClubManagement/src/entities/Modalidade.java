@@ -8,10 +8,10 @@ import java.util.Set;
 
 @Entity
 @NamedQueries({
-        @NamedQuery(
-                name = "getAllModalidades",
-                query = "SELECT m FROM Modalidade m ORDER BY m.nome"
-        )
+    @NamedQuery(
+        name = "getAllModalidades",
+        query = "SELECT m FROM Modalidade m ORDER BY m.nome"
+    )
 })
 @Table(name="MODALIDADES")
 public class Modalidade implements Serializable {

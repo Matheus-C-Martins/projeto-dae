@@ -9,7 +9,6 @@ import javax.ejb.EJBException;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.security.Principal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -22,16 +21,13 @@ public class AdministradorController {
 
     AdministradorDTO toDTO(Administrador administrador) {
         return new AdministradorDTO(
-                administrador.getUsername(),
-                administrador.getPassword(),
-                administrador.getName(),
-                administrador.getEmail()
+            administrador.getUsername(),
+            administrador.getPassword(),
+            administrador.getName(),
+            administrador.getEmail()
         );
     }
-
-    List<AdministradorDTO> toDTOs(List<Administrador> administradors) {
-        return administradors.stream().map(this::toDTO).collect(Collectors.toList());
-    }
+    List<AdministradorDTO> toDTOs(List<Administrador> administradors) { return administradors.stream().map(this::toDTO).collect(Collectors.toList()); }
 
     @GET
     @Path("/")
@@ -43,7 +39,7 @@ public class AdministradorController {
         }
     }
 
-    @GET
+    /*@GET
     @Path("{username}")
     public Response getAdminDetails(@PathParam("username") String username) {
         String msg;
@@ -63,7 +59,7 @@ public class AdministradorController {
         return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
                 .entity(msg)
                 .build();
-    }
+    }*/
 
     @POST
     @Path("/")
@@ -74,13 +70,12 @@ public class AdministradorController {
                     administradorDTO.getNome(),
                     administradorDTO.getEmail());
             Administrador newAdmin = administradorBean.findAdmin(administradorDTO.getUsername());
-            if(newAdmin!=null)
-                return Response.status(Response.Status.CREATED)
-                        .entity(toDTO(newAdmin))
-                        .build();
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+            if(newAdmin!=null) {
+                return Response.status(Response.Status.CREATED).entity(toDTO(newAdmin)).build();
+            }
+            return Response.status(Response.Status.valueOf("Ocorreu um erro na criação do novo administrador!")).build();
         }catch (Exception e) {
-            throw new EJBException("ERRO_AO_CRIAR_ADMINISTRADOR", e);
+            throw new EJBException("ERRO AO CRIAR ADMINISTRADOR", e);
         }
     }
 
@@ -91,13 +86,11 @@ public class AdministradorController {
             Administrador admin = administradorBean.findAdmin(username);
             if (admin != null) {
                 administradorBean.updateAdmin(username, administradorDTO.getPassword(), administradorDTO.getNome(), administradorDTO.getEmail());
-                return Response.status(Response.Status.OK)
-                        .entity(toDTO(admin))
-                        .build();
+                return Response.status(Response.Status.OK).entity(toDTO(admin)).build();
             }
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+            return Response.status(Response.Status.valueOf("Administrador com o username: '"+ username +"' não existe!")).build();
         } catch (Exception e) {
-            throw new EJBException("ERRO_A_ATUALIZAR_ADMINISTRADOR", e);
+            throw new EJBException("ERRO A ATUALIZAR ADMINISTRADOR", e);
         }
     }
 
@@ -105,15 +98,14 @@ public class AdministradorController {
     @Path("{username}")
     public Response removeAdmin(@PathParam("username") String username) {
         try {
-            Administrador student = administradorBean.findAdmin(username);
-            if (student != null) {
+            Administrador admin = administradorBean.findAdmin(username);
+            if (admin != null) {
                 administradorBean.removeAdmin(username);
-                return Response.status(Response.Status.OK)
-                        .build();
+                return Response.status(Response.Status.OK).build();
             }
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+            return Response.status(Response.Status.valueOf("Administrador com o username: '"+ username +"' não existe!")).build();
         } catch (Exception e) {
-            throw new EJBException("ERRO_A_REMOVER_AMDMINISTRADOR", e);
+            throw new EJBException("ERRO A REMOVER AMDMINISTRADOR", e);
         }
     }
 }

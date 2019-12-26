@@ -7,10 +7,10 @@ import java.io.Serializable;
 
 @Entity
 @NamedQueries({
-        @NamedQuery(
-                name="getAllSocios",
-                query = "SELECT s FROM Socio s ORDER BY s.name"
-        )
+    @NamedQuery(
+        name="getAllSocios",
+        query = "SELECT s FROM Socio s ORDER BY s.name"
+    )
 })
 public class Socio extends User implements Serializable {
     //Mensagens

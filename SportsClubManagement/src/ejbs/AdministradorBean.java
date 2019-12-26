@@ -25,8 +25,11 @@ public class AdministradorBean {
 
     public void create(String username, String password, String name, String email){
         try {
-            Administrador a = new Administrador(username, password, name, email);
-            entityManager.persist(a);
+            Administrador administrador = entityManager.find(Administrador.class, username);
+            if (administrador != null) {
+                throw new EJBException("JA EXISTE UM ADMINISTRADOR COM ESSE USERNAME");
+            }
+            entityManager.persist(new Administrador(username, password, name, email));
         }catch (Exception e){
             throw new EJBException(e);
         }
@@ -34,10 +37,9 @@ public class AdministradorBean {
 
     public List<Administrador> all() {
         try {
-            // remember, maps to: “SELECT s FROM Student s ORDER BY s.name”
             return (List<Administrador>) entityManager.createNamedQuery("getAllAdministradores").getResultList();
         } catch (Exception e) {
-            throw new EJBException("ERROR_A_RECEBER_ADMINISTRADORES", e);
+            throw new EJBException("ERROR A RECEBER ADMINISTRADORES", e);
         }
     }
 
@@ -45,7 +47,7 @@ public class AdministradorBean {
         try{
             return entityManager.find(Administrador.class, username);
         } catch (Exception e) {
-            throw new EJBException("ERRO_A_ENCONTRAR_ADMINISTRADOR", e);
+            throw new EJBException("ERRO A ENCONTRAR ADMINISTRADOR ("+username+")", e);
         }
     }
 
@@ -60,10 +62,10 @@ public class AdministradorBean {
                     admin.setPassword(hashPassword(password));
                 }
             } else {
-                System.out.println("ERRO_A_ENCONTRAR_AMDMINISTRADOR");
+                System.err.println("ERRO A ENCONTRAR AMDMINISTRADOR");
             }
         } catch (Exception e){
-            throw new EJBException("ERRO_A_ATUALIZAR_AMDMINISTRADOR", e);
+            System.err.println("ERRO A ATUALIZAR AMDMINISTRADOR ("+username+") ----> "+ e.toString());
         }
     }
 
@@ -73,14 +75,12 @@ public class AdministradorBean {
             if(administrador != null){
                 entityManager.remove(administrador);
             } else {
-                System.err.println("ERRO_A_ENCONTRAR_AMDMINISTRADOR");
+                System.err.println("ERRO A ENCONTRAR AMDMINISTRADOR");
             }
         } catch (Exception e){
-            System.err.println("ERRO_A_REMOVER_AMDMINISTRADOR ----> "+ e.toString());
+            System.err.println("ERRO A REMOVER AMDMINISTRADOR ("+username+") ----> "+ e.toString());
         }
     }
-
-
 
     private String hashPassword(String password) {
         char[] encoded = null;

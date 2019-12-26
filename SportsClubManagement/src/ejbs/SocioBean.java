@@ -1,15 +1,24 @@
 package ejbs;
 
 import entities.Socio;
+import entities.User;
 
 import javax.ejb.EJBException;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.LockModeType;
 import javax.persistence.PersistenceContext;
+import java.math.BigInteger;
+import java.nio.ByteBuffer;
+import java.nio.CharBuffer;
+import java.nio.charset.Charset;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-@Stateless(name="SocioBeanEJB")
+@Stateless(name = "SocioBeanEJB")
 public class SocioBean {
     @PersistenceContext
     protected EntityManager entityManager;
@@ -20,7 +29,6 @@ public class SocioBean {
             if (socio != null) {
                 throw new EJBException("JA EXISTE UM SOCIO COM ESSE USERNAME");
             }
-
             entityManager.persist(new Socio(username, password, nome, email));
         } catch (Exception e) {
             throw new EJBException(e.getMessage());
@@ -39,36 +47,25 @@ public class SocioBean {
         try {
             return entityManager.find(Socio.class, username);
         } catch (Exception e) {
-            throw new EJBException("ERRO A ENCONTRAR SOCIO COM O USERNAME " + username, e);
+            throw new EJBException("ERRO A ENCONTRAR SOCIO ("+username+")", e);
         }
     }
 
-    public void updateSocio(String oldUsername, String newUsername, String password, String name, String email) {
-        try {
-            Socio socio = entityManager.find(Socio.class, oldUsername);
-            if (socio == null) {
-                throw new EJBException("O SOCIO COM O USERNAME " + oldUsername + "NAO FOI ENCONTRADO");
-            }
-
-            entityManager.lock(socio, LockModeType.OPTIMISTIC);
-            if (!newUsername.equals(oldUsername)) {
-                socio.setUsername(newUsername);
-            }
-
-            if (!socio.getPassword().equals(password)) {
-                socio.setPassword(password);
-            }
-
-            if (!socio.getName().equals(name)) {
-                socio.setName(name);
-            }
-
-            if (!socio.getEmail().equals(email)) {
+    public void updateSocio(String username, String nome, String password, String email) {
+        try{
+            Socio socio = findSocio(username);
+            if(socio != null){
+                entityManager.lock(socio, LockModeType.OPTIMISTIC);
+                socio.setName(nome);
                 socio.setEmail(email);
+                if(password != null){
+                    socio.setPassword(hashPassword(password));
+                }
+            } else {
+                System.err.println("ERRO A ENCONTRAR SOCIO");
             }
-
-        } catch (Exception e) {
-            throw new EJBException("ERRO A ACTUALIZAR SOCIO COM O USERNAME " + oldUsername, e);
+        } catch (Exception e){
+            System.err.println("ERRO A ATUALIZAR SOCIO ("+username+") ----> "+ e.toString());
         }
     }
 
@@ -78,10 +75,24 @@ public class SocioBean {
             if (socio == null) {
                 throw new EJBException("O SOCIO COM O USERNAME " + username + "NAO FOI ENCONTRADO");
             }
-
             entityManager.remove(socio);
         } catch (Exception e) {
-            throw new EJBException("ERRO A APAGAR SOCIO COM O USERNAME " + username, e);
+            System.err.println("ERRO A REMOVER SOCIO ("+username+") ----> "+ e.toString());
         }
+    }
+
+    private String hashPassword(String password) {
+        char[] encoded = null;
+        try {
+            ByteBuffer passwdBuffer =
+                    Charset.defaultCharset().encode(CharBuffer.wrap(password));
+            byte[] passwdBytes = passwdBuffer.array();
+            MessageDigest mdEnc = MessageDigest.getInstance("SHA-256");
+            mdEnc.update(passwdBytes, 0, password.toCharArray().length);
+            encoded = new BigInteger(1, mdEnc.digest()).toString(16).toCharArray();
+        } catch (NoSuchAlgorithmException ex) {
+            Logger.getLogger(User.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return new String(encoded);
     }
 }

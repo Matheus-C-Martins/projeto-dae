@@ -1,13 +1,11 @@
 package entities;
 
 public enum ProdTipos {
-    srtigoDesportivo,
+    artigoDesportivo,
     seguro,
     graduacao,
     inscricao,
     quota,
     aula,
     estagio
-
 }
-//outro???
