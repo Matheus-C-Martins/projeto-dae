@@ -11,7 +11,7 @@
               label='Username'
               outlined
               dense
-              disabled>
+              readonly>
             </v-text-field>
           </v-col>
           <v-col>

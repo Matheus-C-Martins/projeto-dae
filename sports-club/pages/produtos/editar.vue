@@ -7,8 +7,8 @@
         <v-row dense>
           <v-col>
             <v-text-field
-              v-model='administrador.username'
-              label='Username'
+              v-model='produto.tipo'
+              label='Tipo'
               outlined
               dense
               readonly>
@@ -16,8 +16,8 @@
           </v-col>
           <v-col>
             <v-text-field
-              v-model='administrador.nome'
-              label='Nome'
+              v-model='produto.valorBase'
+              label='Valor Base'
               outlined
               dense>
             </v-text-field>
@@ -26,16 +26,8 @@
         <v-row dense>
           <v-col>
             <v-text-field
-              v-model='administrador.email'
-              label='Email Adress'
-              outlined
-              dense>
-            </v-text-field>
-          </v-col>
-          <v-col>
-            <v-text-field
-              v-model='password'
-              label='Password'
+              v-model='produto.descrição'
+              label='Descrição'
               outlined
               dense>
             </v-text-field>
@@ -56,38 +48,20 @@ export default {
   /* eslint-disable */
   props: [
     'title',
-    'administrador'
+    'produto'
   ],
-  data () {
-    return {
-      password: ''
-    }
-  },
   methods: {
     close() {
       this.$emit("close");
     },
     edit () {
-      if (this.password !== '') {
-        console.log(this.password)
-        this.$axios.$put(`/api/administradores/${this.administrador.username}`, {
-          password: this.password,
-          nome: this.administrador.nome,
-          email: this.administrador.email
-        })
-          .then(() => {
-            this.close()
-          })
-      } else {
-        this.$axios.$put(`/api/administradores/${this.administrador.username}`, {
-          password: null,
-          nome: this.administrador.nome,
-          email: this.administrador.email
-        })
-          .then(() => {
-            this.close()
-          })
-      }
+      this.$axios.$put(`/api/produtos/${this.produto.tipo}`, {
+        descrição: this.produto.descrição,
+        valorBase: this.produto.valorBase
+      })
+      .then(() => {
+        this.close()
+      })
     }
   }
 }
