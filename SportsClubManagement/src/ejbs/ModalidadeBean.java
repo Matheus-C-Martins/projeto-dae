@@ -1,10 +1,8 @@
 package ejbs;
 
 import dtos.ModalidadeDTO;
-import entities.Atleta;
-import entities.Escaloes;
-import entities.Modalidade;
-import entities.Treinador;
+import entities.*;
+import ws.ModalidadePK;
 
 import javax.ejb.EJBException;
 import javax.ejb.Stateless;
@@ -18,22 +16,14 @@ import java.util.Set;
 public class ModalidadeBean {
     @PersistenceContext
     protected EntityManager entityManager;
-    ModalidadeDTO modalidadeDTO;
 
-
-    public void create(String nome){
+    public void create(String nome, String escalao){
         try {
-            Modalidade a = new Modalidade(nome);
-            entityManager.persist(a);
-        }catch (Exception e){
-            throw new EJBException(e);
-        }
-    }
-
-    public void create(String nome, Set<Treinador> treinadores, Set<Escaloes> escaloes, Set<Atleta> atletas){
-        try {
-            Modalidade a = new Modalidade(nome, treinadores, atletas, escaloes);
-            entityManager.persist(a);
+            Modalidade modalidade = entityManager.find(Modalidade.class, new ModalidadePK(nome, escalao));
+            if (modalidade != null) {
+                throw new EJBException("JA EXISTE UM ATLETA COM ESSE USERNAME");
+            }
+            entityManager.persist(new Modalidade(nome, escalao));
         }catch (Exception e){
             throw new EJBException(e);
         }
@@ -47,35 +37,17 @@ public class ModalidadeBean {
         }
     }
 
-    public Modalidade findModalidade(String nome) {
+    public Modalidade findModalidade(String nome, String escalao) {
         try{
-            return entityManager.find(Modalidade.class, nome);
+            return entityManager.find(Modalidade.class, new ModalidadePK(nome, escalao));
         } catch (Exception e) {
             throw new EJBException("ERRO_A_ENCONTRAR_MODALIDADE", e);
         }
     }
 
-    public void updateModalidade(String nome, Set<Treinador> treinadores, Set<Escaloes> escaloes, Set<Atleta> atletas){
+    public void removeModalidade(String nome, String escalao){
         try{
-
-            Modalidade mod = findModalidade(nome);
-            if(mod != null){
-                entityManager.lock(mod, LockModeType.OPTIMISTIC);
-                mod.setNome(nome);
-                mod.setTreinadores(treinadores);
-                mod.setEscaloes(escaloes);
-                mod.setAtletas(atletas);
-            } else {
-                System.out.println("ERRO_A_ENCONTRAR_MODALIDADE " + nome);
-            }
-        } catch (Exception e){
-            throw new EJBException("ERRO_A_ATUALIZAR_MODALIDADE", e);
-        }
-    }
-
-    public void removeModalidade(String nome){
-        try{
-            Modalidade modalidade = findModalidade(nome);
+            Modalidade modalidade = findModalidade(nome, escalao);
             if(modalidade != null){
                 entityManager.remove(modalidade);
             } else {

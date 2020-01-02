@@ -10,15 +10,14 @@ import javax.ejb.Startup;
 public class ConfigBean {
     @EJB
     AdministradorBean administradorBean;
-
     @EJB
     ModalidadeBean modalidadeBean;
-
     @EJB
     SocioBean socioBean;
-
     @EJB
     ProdutoBean produtoBean;
+    @EJB
+    AtletaBean atletaBean;
 
     @PostConstruct
     public void populateDB() {
@@ -29,16 +28,25 @@ public class ConfigBean {
             System.out.println("OK");
 
             System.out.print("A Inserir Modalidades na Bade Dados...");
-            modalidadeBean.create("Basquetebol");
-            modalidadeBean.create("Futebol");
-            modalidadeBean.create("Natação");
-            modalidadeBean.create("Voleibol");
-            modalidadeBean.create("Ginástica");
+            modalidadeBean.create("Basquetebol", "Sub-18");
+            modalidadeBean.create("Basquetebol", "Sub-16");
+            modalidadeBean.create("Futebol", "Sub-20");
+            modalidadeBean.create("Voleibol", "Sub-18");
             System.out.println("OK");
 
-            System.out.print("A Inserir Administradores na Bade Dados...");
-            socioBean.create("2171316", "1234", "Matheus Martins", "2171316@my.ipleiria.pt");
+            System.out.print("A Inserir Socios na Bade Dados...");
             socioBean.create("9999999", "1234", "Sócio", "9999999@my.ipleiria.pt");
+            System.out.println("OK");
+
+            System.out.print("A Inserir Atletas na Bade Dados...");
+            atletaBean.create("2171316", "1234", "Matheus Martins", "2171316@my.ipleiria.pt");
+            atletaBean.create("8888888", "1234", "Atleta", "8888888@my.ipleiria.pt");
+            System.out.println("OK");
+
+            System.out.print("A Adicionar Modalidades a Atletas...");
+            atletaBean.enrollAtletaInModalidade("2171316", "Basquetebol", "Sub-18");
+            atletaBean.enrollAtletaInModalidade("8888888", "Basquetebol", "Sub-18");
+            atletaBean.enrollAtletaInModalidade("2171316", "Voleibol", "Sub-18");
             System.out.println("OK");
 
             System.out.print("A Inserir Produtos na Bade Dados...");

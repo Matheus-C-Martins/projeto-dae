@@ -8,7 +8,7 @@ import java.io.Serializable;
 
 @Entity
 public class Treinador extends Socio implements Serializable {
-    @NotNull
+    /*@NotNull
     @ManyToOne
     @JoinColumn(name="TREINADOR_USERNAME")
     private Modalidade modalidade;
@@ -21,5 +21,5 @@ public class Treinador extends Socio implements Serializable {
     public Treinador(String username, String password, String nome, String email, Modalidade modalidade) {
         super(username, password, nome, email);
         this.modalidade =  modalidade;
-    }
+    }*/
 }

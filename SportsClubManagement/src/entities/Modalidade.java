@@ -1,5 +1,7 @@
 package entities;
 
+import ws.ModalidadePK;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -7,50 +9,49 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
+@IdClass(ModalidadePK.class)
 @NamedQueries({
     @NamedQuery(
         name = "getAllModalidades",
-        query = "SELECT m FROM Modalidade m ORDER BY m.nome"
+        query = "SELECT m FROM Modalidade m ORDER BY m.nome, m.escalao"
     )
 })
 @Table(name="MODALIDADES")
 public class Modalidade implements Serializable {
     @Id
     private String nome;
+    @Id
+    private String escalao;
 
-    @NotNull
+    /*
     @OneToMany
-    private Set<Treinador> treinadores;
-
-    @NotNull
     @ManyToMany
-    private Set<Atleta> atletas;
+    @JoinTable(name = "MODALIDADES_TREINADORES", joinColumns = {
+            @JoinColumn(name = "NOME_MODALIDADE", referencedColumnName = "NOME"),
+            @JoinColumn(name = "ESCALAO_MODALIDADE", referencedColumnName = "ESCALAO") },
+            inverseJoinColumns = @JoinColumn(name = "TREINADOR_USERNAME", referencedColumnName ="USERNAME"))
+    private Set<Treinador> treinadores;*/
 
-    @NotNull
-    @ElementCollection
-    private Set<Escaloes> escaloes;
+    @ManyToMany
+    @JoinTable(name = "MODALIDADES_ATLETAS", joinColumns = {
+            @JoinColumn(name = "NOME_MODALIDADE", referencedColumnName = "NOME"),
+            @JoinColumn(name = "ESCALAO_MODALIDADE", referencedColumnName = "ESCALAO") },
+            inverseJoinColumns = @JoinColumn(name = "ATLETA_USERNAME", referencedColumnName ="USERNAME"))
+    private Set<Atleta> atletas;
 
     /*@NotNull
     private Date horario;*/ // TEM DE SER DA CLASS HORARIO, QUE VAI TER UMA HORA DE INICIO, HORA DE FIM E UM DIA DA SEMANDA
 
     public Modalidade() {
-        this.treinadores = new HashSet<>();
+        //this.treinadores = new HashSet<>();
         this.atletas = new HashSet<>();
-        this.escaloes = new HashSet<>();
     }
 
-    public Modalidade(String nome) {
+    public Modalidade(String nome, String escalao) {
         this.nome = nome;
-        this.treinadores = new HashSet<>();
+        this.escalao = escalao;
+        //this.treinadores = new HashSet<>();
         this.atletas = new HashSet<>();
-        this.escaloes = new HashSet<>();
-    }
-
-    public Modalidade(String nome, Set<Treinador> treinadores, Set<Atleta> atletas, Set<Escaloes> escaloes) {
-        this.nome = nome;
-        this.treinadores = treinadores;
-        this.atletas = atletas;
-        this.escaloes = escaloes;
     }
 
     public void setNome(String nome) {
@@ -61,13 +62,21 @@ public class Modalidade implements Serializable {
         return nome;
     }
 
-    public Set<Treinador> getTreinadores() {
-        return treinadores;
+    public String getEscalao() {
+        return escalao;
     }
 
-    public void setTreinadores(Set<Treinador> treinadores) {
-        this.treinadores = treinadores;
+    public void setEscalao(String escalao) {
+        this.escalao = escalao;
     }
+
+    /*public Set<Treinador> getTreinadores() {
+        return treinadores;
+    }*/
+
+    /*public void setTreinadores(Set<Treinador> treinadores) {
+        this.treinadores = treinadores;
+    }*/
 
     public Set<Atleta> getAtletas() {
         return atletas;
@@ -77,21 +86,13 @@ public class Modalidade implements Serializable {
         this.atletas = atletas;
     }
 
-    public Set<Escaloes> getEscaloes() {
-        return escaloes;
-    }
-
-    public void setEscaloes(Set<Escaloes> escaloes) {
-        this.escaloes = escaloes;
-    }
-
-    public void adicionarTreinador(Treinador treinador){
+    /*public void adicionarTreinador(Treinador treinador){
         treinadores.add(treinador);
-    }
+    }*/
 
-    public void removerTreinador(Treinador treinador){
+    /*public void removerTreinador(Treinador treinador){
         treinadores.remove(treinador);
-    }
+    }*/
 
     public void adicionarAtleta(Atleta atleta){
         atletas.add(atleta);
@@ -99,13 +100,5 @@ public class Modalidade implements Serializable {
 
     public void removerAtleta(Atleta atleta){
         atletas.remove(atleta);
-    }
-
-    public void adicionarEscalao(Escaloes escalao){
-        escaloes.add(escalao);
-    }
-
-    public void removerEscalao(Escaloes escalao){
-        escaloes.remove(escalao);
     }
 }

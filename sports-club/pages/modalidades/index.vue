@@ -5,7 +5,7 @@
       <v-data-table
         :loading='loading'
         loading-text='A carregar modalidades... Aguarde um momento'
-        item-key='nome'
+        item-key='nome, escalao'
         expand-icon
         :headers='headers'
         :items='modalidades'
@@ -32,7 +32,8 @@ export default {
     return {
       loading: true,
       headers: [
-        { text: 'Nome', value: 'nome', align: 'center', sortable: false }
+        { text: 'Nome', value: 'nome', align: 'center', sortable: false },
+        { text: 'Escalão', value: 'escalao', align: 'center', sortable: false }
       ],
       modalidades: []
     }

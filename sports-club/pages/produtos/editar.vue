@@ -11,13 +11,15 @@
               label='Tipo'
               outlined
               dense
-              readonly>
+              readonly
+              disabled>
             </v-text-field>
           </v-col>
           <v-col>
             <v-text-field
               v-model='produto.valorBase'
               label='Valor Base'
+              prefix="€"
               outlined
               dense>
             </v-text-field>

@@ -19,6 +19,8 @@ public class Produto implements Serializable {
     private String descricao;
     @NotNull
     private double valorBase;
+    @Version
+    private int version;
 
     public Produto() {
     }

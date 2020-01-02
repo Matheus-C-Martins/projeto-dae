@@ -9,7 +9,7 @@ import java.io.Serializable;
 @NamedQueries({
     @NamedQuery(
         name="getAllSocios",
-        query = "SELECT s FROM Socio s ORDER BY s.name"
+        query = "SELECT s FROM Socio s ORDER BY s.username"
     )
 })
 public class Socio extends User implements Serializable {

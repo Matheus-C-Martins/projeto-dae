@@ -18,13 +18,13 @@
             <v-divider class='mx-4' inset vertical></v-divider>
             <v-spacer></v-spacer>
             <v-dialog v-model="dialogEdit" max-width='500px'>
-              <edit-produto @close="closeEdit" :produto="editedItem" :title="formTitle"></edit-produto>
+              <edit-produto @close="closeEdit" :key="editarKey" :produto="editedItem" :title="formTitle"></edit-produto>
             </v-dialog>
             <v-dialog v-model='dialog' max-width='500px'>
               <template v-slot:activator='{ on }'>
-                <v-btn color='primary' dark class='mb-2' v-on='on'>Criar Produtos</v-btn>
+                <v-btn color='primary' dark class='mb-2' v-on='on' @click="criarKey+=1">Criar Produto</v-btn>
               </template>
-              <create-produto @close="close" :produto="editedItem" :title="formTitle"></create-produto>
+              <create-produto @close="close" :key="criarKey" :produto="editedItem" :title="formTitle"></create-produto>
             </v-dialog>
           </v-toolbar>
         </template>
@@ -66,6 +66,8 @@ export default {
       produtos: [],
       dialog: false,
       dialogEdit: false,
+      editarKey: 0,
+      criarKey: 0,
       editedIndex: -1,
       editedItem: {
         tipo: '',
@@ -103,6 +105,7 @@ export default {
       })
     },
     editItem (item) {
+      this.editarKey += 1;
       this.editedIndex = this.produtos.indexOf(item)
       this.editedItem = Object.assign({}, item)
       this.dialogEdit = true

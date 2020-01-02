@@ -11,7 +11,8 @@
               label='Username'
               outlined
               dense
-              readonly>
+              readonly
+              disabled>
             </v-text-field>
           </v-col>
           <v-col>
@@ -65,11 +66,12 @@ export default {
   },
   methods: {
     close() {
+      this.password = ''
       this.$emit("close");
     },
     edit () {
       if (this.password !== '') {
-        console.log(this.password)
+        //console.log(this.password)
         this.$axios.$put(`/api/administradores/${this.administrador.username}`, {
           password: this.password,
           nome: this.administrador.nome,
@@ -85,6 +87,7 @@ export default {
           email: this.administrador.email
         })
           .then(() => {
+            this.password = ''
             this.close()
           })
       }

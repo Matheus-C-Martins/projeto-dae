@@ -21,6 +21,7 @@
               v-model="produto.valorBase"
               label="Valor Base"
               :error-messages="valorBaseErrors"
+              prefix="€"
               outlined
               dense
               @input="$v.produto.valorBase.$touch()"
