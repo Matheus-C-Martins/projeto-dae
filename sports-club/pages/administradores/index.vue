@@ -19,7 +19,7 @@
             <v-divider class='mx-4' inset vertical></v-divider>
             <v-text-field
               v-model="search"
-              label="Procurar por Email"
+              label="Procurar por Username ou Email"
               hide-details
               outlined
               dense
@@ -66,7 +66,7 @@ export default {
         mdiDelete
       },
       headers: [
-        { text: 'Username', value: 'username', align: 'center', sortable: false, filterable: false },
+        { text: 'Username', value: 'username', align: 'center', sortable: false },
         { text: 'Nome', value: 'nome', align: 'center', sortable: false, filterable: false },
         { text: 'Email', value: 'email', align: 'center', sortable: false },
         { text: 'Actions', value: 'action', sortable: false, filterable: false }

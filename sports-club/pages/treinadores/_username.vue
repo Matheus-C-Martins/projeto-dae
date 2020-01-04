@@ -45,8 +45,14 @@
               </v-dialog>
             </v-toolbar>
           </template>
-          <template v-slot:item.unroll="{ item }">
+          <template v-slot:item.actions="{ item }">
             <v-icon small @click="deleteItem(item)"> {{ icons.mdiDelete }} </v-icon>
+            <v-dialog v-model='dialogDetalhes'>
+              <template v-slot:activator='{ on }'>
+                <v-btn color='primary' dark class='mb-2' v-on='on' @click="detalhesKey+=1; show(item)"> DETALHES </v-btn>
+              </template>
+              <detalhes @close="close" :nome="nome" :escalao="escalao" :key="detalhesKey"></detalhes>
+            </v-dialog>
           </template>
         </v-data-table>
       </v-card-text>
@@ -61,22 +67,28 @@
 /* eslint-disable */
 import { mdiDelete } from '@mdi/js'
 import IncreverTreinador from './inscrever'
+import Detalhes from './detalhesModalidade'
 
 export default {
   components: {
-    'inscrever-treinador': IncreverTreinador
+    'inscrever-treinador': IncreverTreinador,
+    'detalhes': Detalhes
   },
   data() {
     return {
       loading: true,
       dialog: false,
+      dialogDetalhes: false,
+      nome:'',
+      escalao:'',
       componentKey: 0,
+      detalhesKey: 0,
       icons: { mdiDelete },
       treinador: {},
       headers: [
         { text: 'Nome', value: 'nome', align: 'center', sortable: false },
         { text: 'Escalão', value: 'escalao', align: 'center', sortable: false },
-        { text: '', value: 'unroll', sortable: false }
+        { text: 'Ações', value: 'actions', align: 'center', sortable: false }
       ],
       modalidades: []
     };
@@ -93,6 +105,9 @@ export default {
     dialog (val) {
       val || this.close();
     },
+    dialogDetalhes (val) {
+      val || this.close();
+    },
   },
   methods: {
     initialize() {
@@ -100,7 +115,7 @@ export default {
       this.getModalidades();
     },
     close() {
-      this.dialog = false;
+      this.dialogDetalhes = this.dialog = false;
       this.loading = true;
       this.getModalidades();
       setTimeout(() => {
@@ -118,9 +133,13 @@ export default {
     deleteItem (item) {
       confirm(`Tem a certeza que pertende desinscrever esta modalidade: ${item.nome} ${item.escalao}?`) &&
       this.$axios.$delete(`/api/treinadores/${this.username}/modalidades/${item.nome}&&${item.escalao}`, {}).then(() => {
-          this.loading = true;
-          this.initialize();
-        })
+        this.loading = true;
+        this.initialize();
+      })
+    },
+    show(item){
+      this.nome = item.nome;
+      this.escalao = item.escalao;
     },
   }
 }

@@ -40,6 +40,14 @@
               <v-btn color='primary' dark class='mb-2' @click="logout()"> LOGOUT </v-btn>
             </v-toolbar>
           </template>
+          <template v-slot:item.actions="{ item }">
+            <v-dialog v-model='dialog'>
+              <template v-slot:activator='{ on }'>
+                <v-btn color='primary' dark class='mb-2' v-on='on' @click="componentKey+=1; show(item)"> DETALHES </v-btn>
+              </template>
+              <detalhes @close="close" :nome="nome" :escalao="escalao" :key="componentKey"></detalhes>
+            </v-dialog>
+          </template>
         </v-data-table>
       </v-card-text>
     </v-card>
@@ -48,14 +56,24 @@
 
 <script>
 /* eslint-disable */
+import Detalhes from '../atletas/detalhesModalidade'
+
 export default {
+  components: {
+    'detalhes': Detalhes
+  },
   data() {
     return {
       loading: true,
+      dialog: false,
+      componentKey: 0,
+      nome:'',
+      escalao:'',
       atleta: {},
       headers: [
         { text: 'Nome', value: 'nome', align: 'center', sortable: false },
-        { text: 'Escalão', value: 'escalao', align: 'center', sortable: false }
+        { text: 'Escalão', value: 'escalao', align: 'center', sortable: false },
+        { text: '', value: 'actions', align: 'center', sortable: false }
       ],
       modalidades: []
     };
@@ -78,6 +96,9 @@ export default {
       this.$axios.$get(`/api/atletas/${this.username}`).then(atleta => (this.atleta = atleta || {}));
       this.getModalidades();
     },
+    close() {
+      this.dialog = false;
+    },
     getModalidades() {
       this.$axios.$get(`/api/atletas/${this.username}/modalidades`).then(modalidades => (this.modalidades = modalidades || {}));
       this.loading = false;
@@ -86,6 +107,10 @@ export default {
       let promise = await this.$auth.logout('local');
       this.$toast.success("Obrigado por utilizar a nossa plataforma.");
       this.$router.push('/')
+    },
+    show(item){
+      this.nome = item.nome;
+      this.escalao = item.escalao;
     }
   }
 }

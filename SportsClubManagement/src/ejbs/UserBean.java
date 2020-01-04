@@ -1,19 +1,30 @@
 package ejbs;
 import entities.User;
+
+import javax.ejb.EJBException;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.util.List;
 
 @Stateless
 public class UserBean {
     @PersistenceContext
     EntityManager em;
-    public User authenticate(final String username, final String password)
-            throws Exception {
+
+    public User authenticate(final String username, final String password) throws Exception {
         User user = em.find(User.class, username);
         if (user != null && user.getPassword().equals(User.hashPassword(password))) {
             return user;
         }
         throw new Exception("Failed logging in with username '" + username + "': unknown username or wrong password");
+    }
+
+    public List<User> all() {
+        try {
+            return (List<User>) em.createNamedQuery("getAllUsers").getResultList();
+        } catch (Exception e) {
+            throw new EJBException("ERROR A OBTER USERS", e);
+        }
     }
 }

@@ -19,7 +19,7 @@
             <v-divider class='mx-4' inset vertical></v-divider>
             <v-text-field
               v-model="search"
-              label="Procurar por Email"
+              label="Procurar por Username ou Email"
               hide-details
               outlined
               dense
@@ -37,7 +37,8 @@
           </v-toolbar>
         </template>
         <template v-slot:item.action="{ item }">
-          <v-icon small class="mr-2" @click="editItem(item)"> {{ icons.mdiPencil }} </v-icon>
+          <v-icon small @click="expandItem(item)"> {{ icons.mdiAccount }} </v-icon>
+          <v-icon small @click="editItem(item)"> {{ icons.mdiPencil }} </v-icon>
           <v-icon small @click="deleteItem(item)"> {{ icons.mdiDelete }} </v-icon>
         </template>
       </v-data-table>
@@ -49,7 +50,7 @@
 </template>
 <script>
 /* eslint-disable */
-import { mdiPencil, mdiDelete } from '@mdi/js'
+import { mdiPencil, mdiDelete, mdiAccount } from '@mdi/js'
 import EditarSocio from './editar'
 import CriarSocio from './criar'
 
@@ -63,10 +64,11 @@ export default {
       loading: true,
       icons: {
         mdiPencil,
-        mdiDelete
+        mdiDelete,
+        mdiAccount
       },
       headers: [
-        { text: 'Username', value: 'username', align: 'center', sortable: false, filterable: false },
+        { text: 'Username', value: 'username', align: 'center', sortable: false },
         { text: 'Nome', value: 'nome', align: 'center', sortable: false, filterable: false },
         { text: 'Email', value: 'email', align: 'center', sortable: false },
         { text: 'Ações', value: 'action', align: 'center', sortable: false, filterable: false }
@@ -147,6 +149,9 @@ export default {
         this.editedItem = Object.assign({}, this.defaultItem)
         this.editedIndex = -1
       }, 300)
+    },
+    expandItem (item) {
+      this.$router.push(`/socios/${item.username}`)
     },
   }
 }

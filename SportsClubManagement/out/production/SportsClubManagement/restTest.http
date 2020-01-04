@@ -15,8 +15,7 @@ Content-Type: application/json
 }
 
 ### Who am I?
-GET http://localhost:8080/sportsclub/api/logi
-n/claims
+GET http://localhost:8080/sportsclub/api/login/claims
 Accept: application/json
 Authorization: Bearer eyJ0eXAiOiJqd3QiLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJBZG1pbjEiLCJpc3MiOiJxdWlja3N0YXJ0LWp3dC1pc3N1ZXIiLCJhdWQiOiJqd3QtYXVkaWVuY2UiLCJncm91cHMiOlsiQWRtaW5pc3RyYWRvciJdLCJleHAiOjE1NzgxMTcxNzJ9.cV-IXHjvZsrwXAc9gnDyEF1zs5r9rg87lSmvIFNG3UoY2rWQcXVC-k5hGs4-RES6VThHLR4Kw3RQOYOelYRkfYXWj1lH6lNc7BJytUbVVGi0PVfKLzSidjl2CASTc8fjQQ5mudo0WeWWm5iJhq8vfAw3EjKx7nClCOb8jvx5caPLjnPwnl-6iAbF7qoz3uRo4fE-yBIIwLAmDOZpPc8tD4SrGUnRw7EBxzYLjbknea2UyoIAEzDKUiWFE1VQJT-FU8-KKbNLlzv7TiBbDrhvvU_AZjd3FT2FcPPqKPgJ_UNAwQC-8emHMVulWvbVpW5mOIkDxs3QZNcUy2Vbv5l-FA
 ##### Get students list
