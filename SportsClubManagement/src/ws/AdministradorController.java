@@ -7,8 +7,10 @@ import entities.Administrador;
 import javax.ejb.EJB;
 import javax.ejb.EJBException;
 import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.SecurityContext;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -16,6 +18,9 @@ import java.util.stream.Collectors;
 @Produces({MediaType.APPLICATION_JSON}) // injects header “Content-Type: application/json”
 @Consumes({MediaType.APPLICATION_JSON}) // injects header “Accept: application/json”
 public class AdministradorController {
+    @Context
+    private SecurityContext securityContext;
+
     @EJB
     private AdministradorBean administradorBean;
 
