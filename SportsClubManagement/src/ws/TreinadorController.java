@@ -3,14 +3,11 @@ package ws;
 import dtos.ModalidadeDTO;
 import dtos.TreinadorDTO;
 import ejbs.TreinadorBean;
-import entities.Atleta;
 import entities.Modalidade;
 import entities.Treinador;
 
 import javax.ejb.EJB;
 import javax.ejb.EJBException;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import javax.ws.rs.*;
 import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;

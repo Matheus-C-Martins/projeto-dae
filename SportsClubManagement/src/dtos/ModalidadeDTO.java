@@ -1,8 +1,5 @@
 package dtos;
 
-import entities.Atleta;
-import entities.Treinador;
-
 import java.io.Serializable;
 import java.util.Set;
 

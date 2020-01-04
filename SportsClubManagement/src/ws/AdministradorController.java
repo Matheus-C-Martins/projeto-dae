@@ -14,9 +14,9 @@ import javax.ws.rs.core.SecurityContext;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Path("/administradores") // relative url web path of this controller
-@Produces({MediaType.APPLICATION_JSON}) // injects header “Content-Type: application/json”
-@Consumes({MediaType.APPLICATION_JSON}) // injects header “Accept: application/json”
+@Path("/administradores")
+@Produces({MediaType.APPLICATION_JSON})
+@Consumes({MediaType.APPLICATION_JSON})
 public class AdministradorController {
     @Context
     private SecurityContext securityContext;
@@ -43,28 +43,6 @@ public class AdministradorController {
             throw new EJBException("ERROR_GET_ADMINISTRADORES", e);
         }
     }
-
-    /*@GET
-    @Path("{username}")
-    public Response getAdminDetails(@PathParam("username") String username) {
-        String msg;
-        try {
-            Administrador administrador = administradorBean.findAdmin(username);
-            if (administrador != null) {
-                return Response.status(Response.Status.OK)
-                        .entity(toDTO(administrador))
-                        .build();
-            }
-            msg = "ERRO_A_ENCONTRAR_ADMINISTRADOR";
-            System.err.println(msg);
-        } catch (Exception e) {
-            msg = "ERRO_AO_ADQUIRUIR_OS_DETALHES_DO_ADMINISTRADOR --->" + e.getMessage();
-            System.err.println(msg);
-        }
-        return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                .entity(msg)
-                .build();
-    }*/
 
     @POST
     @Path("/")
