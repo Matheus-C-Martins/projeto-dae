@@ -41,7 +41,7 @@ export default {
       });
       promise.then(() => {
         this.$toast.success("Bem-vindo!");
-        console.log(this.$auth.user)
+        //console.log(this.$auth.user)
         if (this.$auth.user.groups.includes("Administrador")) {
           this.$router.push(`/`);
         } else if (this.$auth.user.groups.includes("Atleta")) {

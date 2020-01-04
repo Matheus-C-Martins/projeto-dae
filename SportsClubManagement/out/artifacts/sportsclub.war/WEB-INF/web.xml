@@ -204,6 +204,37 @@
             <role-name>Administrador</role-name>
         </auth-constraint>
     </security-constraint>
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>Lista de pagamentos</web-resource-name>
+            <url-pattern>/api/pagamentos</url-pattern>
+            <http-method>GET</http-method>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>Administrador</role-name>
+        </auth-constraint>
+    </security-constraint>
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>Criar pagamentos</web-resource-name>
+            <url-pattern>/api/pagamentos</url-pattern>
+            <http-method>POST</http-method>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>Administrador</role-name>
+        </auth-constraint>
+    </security-constraint>
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>Editar e eliminar pagamentos</web-resource-name>
+            <url-pattern>/api/pagamentos/*</url-pattern>
+            <http-method>PUT</http-method>
+            <http-method>DELETE</http-method>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>Administrador</role-name>
+        </auth-constraint>
+    </security-constraint>
     <security-role>
         <description>Administrador role</description>
         <role-name>Administrador</role-name>

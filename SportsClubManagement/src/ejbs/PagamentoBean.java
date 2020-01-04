@@ -26,7 +26,6 @@ public class PagamentoBean {
 
     public void create(String username, String tipoProduto, double quantidade, double preco, String estado) {
         try {
-
             if (produtoBean.findProduto(tipoProduto) != null) {
                 if(administradorBean.findAdmin(username)!=null || socioBean.findSocio(username)!=null || treinadorBean.findTreinador(username)!=null || atletaBean.findAtleta(username)!=null) {
                     Pagamento pagamento = entityManager.find(Pagamento.class, new PagamentoPK(username, tipoProduto));

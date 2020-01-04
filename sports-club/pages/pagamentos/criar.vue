@@ -34,7 +34,6 @@
               v-model="pagamento.quantidade"
               label="Quantidade"
               :error-messages="quantidadeErrors"
-              prefix="€"
               outlined
               dense
               @input="$v.pagamento.quantidade.$touch()"
@@ -71,8 +70,8 @@
     </v-card-text>
     <v-card-actions style="padding-top: 0px">
       <v-spacer></v-spacer>
-      <v-btn color="blue darken-1" text @click="close">Cancelar</v-btn>
-      <v-btn color="blue darken-1" text @click="save">Criar</v-btn>
+      <v-btn color="blue darken-1" text @click="close"> Cancelar </v-btn>
+      <v-btn color="blue darken-1" text @click="save"> Criar </v-btn>
     </v-card-actions>
   </v-card>
 </template>
@@ -143,6 +142,7 @@ export default {
       if (this.$v.$error) {
         return
       }
+      console.log(this.pagamento)
       this.$axios.$post('/api/pagamentos', {
         username: this.pagamento.username,
         tipoProduto: this.pagamento.tipoProduto,

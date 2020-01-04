@@ -8,7 +8,7 @@
         item-key='username,tipoProduto'
         expand-icon
         :headers='headers'
-        :items='produtos'
+        :items='pagamentos'
         class='elevation-1'
         no-data-text='Não existem pagamentos'
         :search="search"
@@ -26,13 +26,13 @@
             ></v-text-field>
             <v-spacer></v-spacer>
             <v-dialog v-model="dialogEdit" max-width='500px'>
-              <edit-produto @close="closeEdit" :key="editarKey" :produto="editedItem" :title="formTitle"></edit-produto>
+              <edit-pagamento @close="closeEdit" :key="editarKey" :pagamento="editedItem" :title="formTitle"></edit-pagamento>
             </v-dialog>
             <v-dialog v-model='dialog' max-width='500px'>
               <template v-slot:activator='{ on }'>
                 <v-btn color='primary' dark class='mb-2' v-on='on' @click="criarKey+=1">Criar Pagamento</v-btn>
               </template>
-              <create-produto @close="close" :key="criarKey" :produto="editedItem" :title="formTitle"></create-produto>
+              <create-pagamento @close="close" :key="criarKey" :pagamento="editedItem" :title="formTitle"></create-pagamento>
             </v-dialog>
           </v-toolbar>
         </template>
@@ -51,8 +51,8 @@
 <script>
 /* eslint-disable */
 import { mdiPencil, mdiDelete } from '@mdi/js'
-import EditarProduto from './editar'
-import CriarProduto from './criar'
+import EditarPagamento from './editar'
+import CriarPagamento from './criar'
 
 export default {
   components: {
