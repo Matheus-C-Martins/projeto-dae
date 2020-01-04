@@ -1,10 +1,12 @@
 package ws;
 
 import dtos.AtletaDTO;
+import dtos.HorarioDTO;
 import dtos.ModalidadeDTO;
 import dtos.TreinadorDTO;
 import ejbs.ModalidadeBean;
 import entities.Atleta;
+import entities.Horario;
 import entities.Modalidade;
 import entities.Treinador;
 
@@ -30,7 +32,8 @@ public class ModalidadeController {
                 modalidade.getNome(),
                 toTreinadorDTOs(modalidade.getTreinadores()),
                 toAtletaDTOs(modalidade.getAtletas()),
-                modalidade.getEscalao()
+                modalidade.getEscalao(),
+                toHorarioDTOs(modalidade.getHorarios())
         );
     }
 
@@ -57,6 +60,18 @@ public class ModalidadeController {
 
     List<ModalidadeDTO> toEscalaoDTOs(List<String> modalidades) {
         return modalidades.stream().map(this::toEscalaoDTO).collect(Collectors.toList());
+    }
+
+    HorarioDTO toHorarioDTO(Horario horario) {
+        return new HorarioDTO(
+                horario.getDiaSemana(),
+                horario.getHoraInicio(),
+                horario.getHoraFim(),
+                new HashSet<>()
+        );
+    }
+    Set<HorarioDTO> toHorarioDTOs(Set<Horario> horarios) {
+        return horarios.stream().map(this::toHorarioDTO).collect(Collectors.toSet());
     }
 
     AtletaDTO toAtletaDTO(Atleta atleta) {

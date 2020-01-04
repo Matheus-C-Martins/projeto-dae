@@ -24,7 +24,7 @@ public class AtletaController {
     @EJB
     private AtletaBean atletaBean;
 
-    /* ----- ATLETA SEM MODALIDADES ----- */        //EXISTE APENAS QUANDO O ATLETA E CRIADO
+    /* ----- ATLETA SEM MODALIDADES ----- */
     AtletaDTO toDTOSemModalidades(Atleta atleta) {
         return new AtletaDTO(
                 atleta.getUsername(),

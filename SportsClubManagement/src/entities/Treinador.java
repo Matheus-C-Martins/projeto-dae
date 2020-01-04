@@ -24,7 +24,6 @@ public class Treinador extends Socio implements Serializable {
                 @JoinColumn(name = "ESCALAO_MODALIDADE", referencedColumnName ="ESCALAO"),
             })
     private Set<Modalidade> modalidades;
-    // Horarios
 
     public Treinador() {
         super();

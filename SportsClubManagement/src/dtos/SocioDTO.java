@@ -3,7 +3,7 @@ package dtos;
 import java.io.Serializable;
 
 public class SocioDTO implements Serializable {
-    public String username, password, nome, email;
+    private String username, password, nome, email;
 
     public SocioDTO() {}
 

@@ -1,6 +1,7 @@
 package entities;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
@@ -12,7 +13,7 @@ import java.util.Set;
         name = "getAllModalidadeEscaloes",
         query = "SELECT m.escalao FROM Modalidade m WHERE UPPER(m.nome) = UPPER(:nome) ORDER BY m.escalao"
     ),
-     @NamedQuery(
+    @NamedQuery(
         name = "getAllModalidadesNomes",
         query = "SELECT DISTINCT m.nome FROM Modalidade m ORDER BY m.nome"
     )
@@ -38,8 +39,16 @@ public class Modalidade implements Serializable {
             inverseJoinColumns = @JoinColumn(name = "ATLETA_USERNAME", referencedColumnName ="USERNAME"))
     private Set<Atleta> atletas;
 
-    /*@NotNull
-    private Date horario;*/ // TEM DE SER DA CLASS HORARIO, QUE VAI TER UMA HORA DE INICIO, HORA DE FIM E UM DIA DA SEMANDA
+    @ManyToMany
+    @JoinTable(name = "MODALIDADES_HORARIOS", joinColumns = {
+            @JoinColumn(name = "NOME_MODALIDADE", referencedColumnName = "NOME"),
+            @JoinColumn(name = "ESCALAO_MODALIDADE", referencedColumnName = "ESCALAO") },
+            inverseJoinColumns = {
+                @JoinColumn(name = "DIA_SEMANA", referencedColumnName = "DIASEMANA"),
+                @JoinColumn(name = "HORA_INICIO", referencedColumnName = "HORAINICIO"),
+                @JoinColumn(name = "HORA_FIM", referencedColumnName = "HORAFIM")
+            })
+    private Set<Horario> horarios;
 
     public Modalidade() {
         this.treinadores = new HashSet<>();
@@ -51,6 +60,7 @@ public class Modalidade implements Serializable {
         this.escalao = escalao;
         this.treinadores = new HashSet<>();
         this.atletas = new HashSet<>();
+        this.horarios = new HashSet<>();
     }
 
     public void setNome(String nome) {
@@ -85,6 +95,14 @@ public class Modalidade implements Serializable {
         this.atletas = atletas;
     }
 
+    public Set<Horario> getHorarios() {
+        return horarios;
+    }
+
+    public void setHorarios(Set<Horario> horarios) {
+        this.horarios = horarios;
+    }
+
     public void adicionarTreinador(Treinador treinador){
         treinadores.add(treinador);
     }
@@ -99,5 +117,13 @@ public class Modalidade implements Serializable {
 
     public void removerAtleta(Atleta atleta){
         atletas.remove(atleta);
+    }
+
+    public void adicionarHorario(Horario horario){
+        horarios.add(horario);
+    }
+
+    public void removerHorario(Horario horario){
+        horarios.remove(horario);
     }
 }

@@ -3,8 +3,7 @@ package dtos;
 import java.io.Serializable;
 
 public class AuthDTO implements Serializable {
-    private String username;
-    private String password;
+    private String username, password;
 
     public AuthDTO() {
     }

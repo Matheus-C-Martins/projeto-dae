@@ -3,8 +3,8 @@ package dtos;
 import java.io.Serializable;
 
 public class ProdutoDTO implements Serializable {
-    public String tipo, descrição;
-    public double valorBase;
+    private String tipo, descrição;
+    private double valorBase;
 
     public ProdutoDTO() {}
 

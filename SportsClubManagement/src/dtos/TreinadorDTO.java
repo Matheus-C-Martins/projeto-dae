@@ -1,7 +1,5 @@
 package dtos;
 
-import entities.Modalidade;
-
 import java.util.HashSet;
 import java.util.Set;
 

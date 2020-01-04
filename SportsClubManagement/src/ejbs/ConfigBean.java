@@ -22,6 +22,8 @@ public class ConfigBean {
     AtletaBean atletaBean;
     @EJB
     TreinadorBean treinadorBean;
+    @EJB
+    HorarioBean horarioBean;
 
     @PostConstruct
     public void populateDB() {
@@ -36,6 +38,24 @@ public class ConfigBean {
             modalidadeBean.create("Basquetebol", "Sub-16");
             modalidadeBean.create("Futebol", "Sub-20");
             modalidadeBean.create("Voleibol", "Sub-18");
+            System.out.println("OK");
+
+            System.out.print("A Inserir Horarios na Bade Dados...");
+            horarioBean.create("Terça-feira", "19:00", "20:30");
+            horarioBean.create("Terça-feira", "20:30", "22:00");
+            horarioBean.create("Quarta-feira", "17:30", "19:30");
+            horarioBean.create("Sexta-feira", "19:30", "21:00");
+            System.out.println("OK");
+
+            System.out.print("A Adicionar Modalidades a Horarios...");
+            horarioBean.enrollHorarioInModalidade("Terça-feira", "19:00", "20:30", "Basquetebol", "Sub-16");
+            horarioBean.enrollHorarioInModalidade("Quarta-feira", "17:30", "19:30", "Basquetebol", "Sub-16");
+            horarioBean.enrollHorarioInModalidade("Terça-feira", "20:30", "22:00", "Basquetebol", "Sub-18");
+            horarioBean.enrollHorarioInModalidade("Sexta-feira", "19:30", "21:00", "Basquetebol", "Sub-18");
+            horarioBean.enrollHorarioInModalidade("Terça-feira", "20:30", "22:00", "Futebol", "Sub-20");
+            horarioBean.enrollHorarioInModalidade("Sexta-feira", "19:30", "21:00", "Futebol", "Sub-20");
+            horarioBean.enrollHorarioInModalidade("Terça-feira", "20:30", "22:00", "Voleibol", "Sub-18");
+            horarioBean.enrollHorarioInModalidade("Sexta-feira", "19:30", "21:00", "Voleibol", "Sub-18");
             System.out.println("OK");
 
             System.out.print("A Inserir Socios na Bade Dados...");
