@@ -21,6 +21,8 @@
           <v-spacer></v-spacer>
           <v-btn color='primary' dark class='mb-2' @click="produtos()"> Produtos </v-btn>
           <v-spacer></v-spacer>
+          <v-btn color='primary' dark class='mb-2' @click="pagamentos()"> Pagamentos </v-btn>
+          <v-spacer></v-spacer>
       </v-row>
       <v-data-table
         :loading='loading'
@@ -90,6 +92,9 @@ export default {
     },
     produtos(){
       this.$router.push('/produtos')
+    },
+    pagamentos(){
+      this.$router.push('/pagamentos')
     },
     async logout() {
       let promise = await this.$auth.logout('local');
