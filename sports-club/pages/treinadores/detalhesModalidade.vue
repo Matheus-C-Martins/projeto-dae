@@ -28,6 +28,9 @@
                 ></v-text-field>
               </v-toolbar>
             </template>
+            <template v-slot:item.send="{ item }">
+              <v-icon small @click="send(item)"> {{ icons.mdiPaperclip }} </v-icon>
+            </template>
           </v-data-table>
         </v-col>
       </v-row>
@@ -68,6 +71,8 @@
 
 <script>
 /* eslint-disable */
+import { mdiPaperclip } from '@mdi/js'
+
 export default {
   props: ['nome', 'escalao'],
   data () {
@@ -78,10 +83,12 @@ export default {
       dialogHorario: false,
       searchAtleta: '',
       searchHorario: '',
+      icons: { mdiPaperclip },
       headers: [
         { text: 'Username', value: 'username', align: 'center', sortable: false },
         { text: 'Nome', value: 'nome', align: 'center', sortable: false, filterable: false },
-        { text: 'Email', value: 'email', align: 'center', sortable: false}
+        { text: 'Email', value: 'email', align: 'center', sortable: false},
+        { text: 'Enviar Email', value: 'send', align: 'center', sortable: false, filterable: false},
       ],
       headersHorarios: [
         { text: 'Dia da Semana', value: 'diaSemana', align: 'center', sortable: false },
@@ -98,6 +105,9 @@ export default {
   methods: {
     back () {
       this.$emit("close");
+    },    
+    send (item) {
+      this.$router.push(`/treinadores/${this.nome}/${this.escalao}/${item.username}`);
     },
     getAtletas(){
       this.$axios.$get(`/api/modalidades/${this.nome}&&${this.escalao}`).then(modalidade => {
