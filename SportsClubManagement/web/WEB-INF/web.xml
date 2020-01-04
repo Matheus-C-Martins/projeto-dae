@@ -165,6 +165,16 @@
     </security-constraint>
     <security-constraint>
         <web-resource-collection>
+            <web-resource-name>Lista de users</web-resource-name>
+            <url-pattern>/api/users</url-pattern>
+            <http-method>GET</http-method>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>Administrador</role-name>
+        </auth-constraint>
+    </security-constraint>
+    <security-constraint>
+        <web-resource-collection>
             <web-resource-name>Lista de produtos</web-resource-name>
             <url-pattern>/api/produtos</url-pattern>
             <http-method>GET</http-method>
