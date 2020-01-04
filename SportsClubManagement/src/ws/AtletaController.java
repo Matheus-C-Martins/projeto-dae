@@ -1,13 +1,16 @@
 package ws;
 
 import dtos.AtletaDTO;
+import dtos.EmailDTO;
 import dtos.ModalidadeDTO;
 import ejbs.AtletaBean;
+import ejbs.EmailBean;
 import entities.Atleta;
 import entities.Modalidade;
 
 import javax.ejb.EJB;
 import javax.ejb.EJBException;
+import javax.mail.MessagingException;
 import javax.ws.rs.*;
 import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
@@ -23,6 +26,8 @@ import java.util.stream.Collectors;
 public class AtletaController {
     @EJB
     private AtletaBean atletaBean;
+    @EJB
+    private EmailBean emailBean;
 
     /* ----- ATLETA SEM MODALIDADES ----- */
     AtletaDTO toDTOSemModalidades(Atleta atleta) {

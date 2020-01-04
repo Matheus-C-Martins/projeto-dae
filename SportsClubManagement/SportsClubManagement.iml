@@ -53,5 +53,6 @@
     <orderEntry type="library" name="javax.json.binding-1.0" level="project" />
     <orderEntry type="library" name="com.nimbusds:nimbus-jose-jwt:7.0.1" level="project" />
     <orderEntry type="library" name="javax.json.processing-1.0" level="project" />
+    <orderEntry type="library" name="javax.mail" level="project" />
   </component>
 </module>
