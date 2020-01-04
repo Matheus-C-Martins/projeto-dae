@@ -36,6 +36,9 @@
                 </v-dialog>
               </v-toolbar>
             </template>
+            <template v-slot:item.send="{ item }">
+              <v-icon small @click="send(item)"> {{ icons.mdiPaperclip }} </v-icon>
+            </template>
           </v-data-table>
          </v-col>
         <v-col>
@@ -69,6 +72,9 @@
                   <inserir-atleta @close="close" :nome="nome" :escalao="escalao" :key="inserirAtletaKey"></inserir-atleta>
                 </v-dialog>
               </v-toolbar>
+            </template>
+            <template v-slot:item.send="{ item }">
+              <v-icon small @click="send(item)"> {{ icons.mdiPaperclip }} </v-icon>
             </template>
           </v-data-table>
         </v-col>
@@ -120,7 +126,7 @@
 
 <script>
 /* eslint-disable */
-import { mdiDelete } from '@mdi/js'
+import { mdiDelete, mdiPaperclip } from '@mdi/js'
 import AdicionarTreinador from './adicionarTreinador'
 import AdicionarAtleta from './adicionarAtleta'
 import AdicionarHorario from './adicionarHorario'
@@ -145,11 +151,12 @@ export default {
       inserirTreinadorKey: 0,
       inserirAtletaKey: 0,
       inserirHorarioKey: 0,
-      icons: { mdiDelete },
+      icons: { mdiDelete, mdiPaperclip },
       headers: [
         { text: 'Username', value: 'username', align: 'center', sortable: false },
         { text: 'Nome', value: 'nome', align: 'center', sortable: false, filterable: false },
-        { text: 'Email', value: 'email', align: 'center', sortable: false}
+        { text: 'Email', value: 'email', align: 'center', sortable: false},
+        { text: 'Enviar Email', value: 'send', align: 'center', sortable: false, filterable: false},
       ],
       headersHorarios: [
         { text: 'Dia da Semana', value: 'diaSemana', align: 'center', sortable: false },
@@ -199,6 +206,9 @@ export default {
         this.loadingHorarios = true
         this.getTreinadoresAndAtletas()
       })
+    },
+    send (item) {
+      this.$router.push(`/modalidades/${this.nome}/${this.escalao}/${item.username}`);
     },
     getTreinadoresAndAtletas(){
       this.$axios.$get(`/api/modalidades/${this.nome}&&${this.escalao}`).then(modalidade => {

@@ -1,11 +1,18 @@
 package ws;
 
+import dtos.EmailDTO;
 import dtos.SocioDTO;
+import ejbs.AtletaBean;
+import ejbs.EmailBean;
 import ejbs.SocioBean;
+import ejbs.TreinadorBean;
+import entities.Atleta;
 import entities.Socio;
+import entities.Treinador;
 
 import javax.ejb.EJB;
 import javax.ejb.EJBException;
+import javax.mail.MessagingException;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -18,6 +25,12 @@ import java.util.stream.Collectors;
 public class SocioController {
     @EJB
     private SocioBean socioBean;
+    @EJB
+    private TreinadorBean treinadorBean;
+    @EJB
+    private AtletaBean atletaBean;
+    @EJB
+    private EmailBean emailBean;
 
     SocioDTO toDTO(Socio socio) {
         return new SocioDTO(
@@ -65,6 +78,22 @@ public class SocioController {
         } catch (Exception e) {
             throw new EJBException("ERRO AO CRIAR SOCIO", e);
         }
+    }
+
+    @POST
+    @Path("/{username}/email/send")
+    public Response sendEmail(@PathParam("username") String username, EmailDTO email) throws MessagingException {
+        try {
+            Socio socio = socioBean.findSocio(username);
+            if (socio != null) {
+                emailBean.send(socio.getEmail(), email.getAssunto(), email.getMensagem());
+                return Response.status(Response.Status.OK).entity("E-mail enviado").build();
+            }
+            System.err.println("ERRO A ENCONTRAR SOCIO");
+        } catch (Exception e) {
+            System.err.println("ERRO A ENVIAR EMAIL AO SOCIO --->" + e.getMessage());
+        }
+        return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
     }
 
     @PUT
