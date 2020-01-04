@@ -1,16 +1,13 @@
 package ejbs;
 
-import dtos.ModalidadeDTO;
 import entities.*;
-import ws.ModalidadePK;
+import entities.ModalidadePK;
 
 import javax.ejb.EJBException;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
-import javax.persistence.LockModeType;
 import javax.persistence.PersistenceContext;
 import java.util.List;
-import java.util.Set;
 
 @Stateless(name = "ModalidadeEJB")
 public class ModalidadeBean {
@@ -29,11 +26,19 @@ public class ModalidadeBean {
         }
     }
 
-    public List<Modalidade> all() {
+    public List<String> all() {
         try {
-            return (List<Modalidade>) entityManager.createNamedQuery("getAllModalidades").getResultList();
+            return (List<String>) entityManager.createNamedQuery("getAllModalidadesNomes").getResultList();
         } catch (Exception e) {
-            throw new EJBException("ERRO_A_RECEBER_MODALIDADES", e);
+            throw new EJBException("ERRO A RECEBER MODALIDADES", e);
+        }
+    }
+
+    public List<String> allModalidadeEscaloes(String nome) {
+        try {
+            return (List<String>) entityManager.createNamedQuery("getAllModalidadeEscaloes").setParameter("nome", nome).getResultList();
+        } catch (Exception e) {
+            throw new EJBException("ERRO A RECEBER ESCALOES DA MODALIDADE ("+nome+")", e);
         }
     }
 
@@ -41,7 +46,7 @@ public class ModalidadeBean {
         try{
             return entityManager.find(Modalidade.class, new ModalidadePK(nome, escalao));
         } catch (Exception e) {
-            throw new EJBException("ERRO_A_ENCONTRAR_MODALIDADE", e);
+            throw new EJBException("ERRO A ENCONTRAR MODALIDADE", e);
         }
     }
 
@@ -51,10 +56,10 @@ public class ModalidadeBean {
             if(modalidade != null){
                 entityManager.remove(modalidade);
             } else {
-                System.err.println("ERRO_A_ENCONTRAR_MODALIDADE " + nome);
+                System.err.println("ERRO A ENCONTRAR MODALIDADE " + nome);
             }
         } catch (Exception e){
-            System.err.println("ERRO_A_REMOVER_MODALIDADE ----> "+ e.toString());
+            System.err.println("ERRO A REMOVER MODALIDADE ----> "+ e.toString());
         }
     }
 }

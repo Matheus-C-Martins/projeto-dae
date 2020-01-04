@@ -11,47 +11,77 @@
               label='Tipo'
               outlined
               dense
-              readonly
               disabled>
             </v-text-field>
           </v-col>
           <v-col>
             <v-text-field
-              v-model='produto.valorBase'
-              label='Valor Base'
+              v-model="produto.valorBase"
+              label="Valor Base"
+              :error-messages="valorBaseErrors"
               prefix="€"
               outlined
-              dense>
-            </v-text-field>
+              dense
+              @input="$v.produto.valorBase.$touch()"
+              @blur="$v.produto.valorBase.$touch()"
+            ></v-text-field>
           </v-col>
         </v-row>
         <v-row dense>
           <v-col>
             <v-text-field
-              v-model='produto.descrição'
-              label='Descrição'
+              v-model="produto.descrição"
+              label="Descrição"
+              :error-messages="descriçãoErrors"
               outlined
-              dense>
-            </v-text-field>
+              dense
+              @input="$v.produto.descrição.$touch()"
+              @blur="$v.produto.descrição.$touch()"
+            ></v-text-field>
           </v-col>
         </v-row>
       </v-container>
     </v-card-text> 
     <v-card-actions style="padding-top: 0px">
         <v-spacer></v-spacer>
-        <v-btn color="blue darken-1" text @click="close">Cancelar</v-btn>
-        <v-btn color="blue darken-1" text @click="edit">Editar</v-btn>
+        <v-btn color="blue darken-1" text @click="close"> Cancelar </v-btn>
+        <v-btn color="blue darken-1" text @click="edit"> Editar </v-btn>
     </v-card-actions>
   </v-card>
 </template>
 
 <script>
+/* eslint-disable */
+import { validationMixin } from 'vuelidate'
+import { required, maxLength, minLength, minValue, helpers } from 'vuelidate/lib/validators'
+export const valueRegex = helpers.regex('valueRegex', /^\d*\.?\d*$/i)
+
 export default {
-  /* eslint-disable */
-  props: [
-    'title',
-    'produto'
-  ],
+  props: [ 'title', 'produto' ],
+  mixins: [validationMixin],
+  validations: {
+    produto: {
+      descrição: { required, maxLength: maxLength(255) },
+      valorBase: { required, valueRegex, minValue: minValue(0.01) }
+    }
+  },
+  computed: {
+    descriçãoErrors () {
+      const errors = []
+      if (!this.$v.produto.descrição.$dirty) { return errors }
+      !this.$v.produto.descrição.maxLength && errors.push('Descrição só pode ter 255 carateres, no máximo.')
+      !this.$v.produto.descrição.required && errors.push('Descrição é necessária.')
+      return errors
+    },
+    valorBaseErrors () {
+      const errors = []
+      if (!this.$v.produto.valorBase.$dirty) { return errors }
+      !this.$v.produto.valorBase.valueRegex && errors.push('Valor Base tem de conter apenas números.')
+      !this.$v.produto.valorBase.minValue && errors.push('Valor Base tem de ser maior que €0.01.')
+      !this.$v.produto.valorBase.required && errors.push('Valor Base é necessário.')
+      return errors
+    }
+  },
   methods: {
     close() {
       this.$emit("close");

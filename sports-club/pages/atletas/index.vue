@@ -124,12 +124,11 @@ export default {
       this.dialogEdit = true
     },
     deleteItem (item) {
-      confirm(`Tem a certeza que pertende eliminar o Sócio: ${item.username}?`) &&
-      this.$axios.$delete(`/api/atletas/${item.username}`, {})
-        .then(() => {
-          this.loading = true
-          this.getAtletas()
-        })
+      confirm(`Tem a certeza que pertende eliminar o Atleta: ${item.username}?`) &&
+      this.$axios.$delete(`/api/atletas/${item.username}`, {}).then(() => {
+        this.loading = true
+        this.getAtletas()
+      })
     },
     expandItem (item) {
       this.$router.push(`/atletas/${item.username}`)

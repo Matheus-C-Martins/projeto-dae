@@ -93,29 +93,29 @@ export default {
     nomeErrors () {
       const errors = []
       if (!this.$v.socio.nome.$dirty) { return errors }
-      !this.$v.socio.nome.maxLength && errors.push('Name must be at most 25 characters long.')
-      !this.$v.socio.nome.required && errors.push('Name is required.')
+      !this.$v.socio.nome.maxLength && errors.push('Nome deve ter no máximo 25 carateres.')
+      !this.$v.socio.nome.required && errors.push('Name é obtigatório.')
       return errors
     },
     usernameErrors () {
       const errors = []
       if (!this.$v.socio.username.$dirty) { return errors }
-      !this.$v.socio.username.maxLength && errors.push('Username must be at most 10 characters long.')
-      !this.$v.socio.username.required && errors.push('Username is required.')
+      !this.$v.socio.username.maxLength && errors.push('Username deve ter no máximo 10 carateres.')
+      !this.$v.socio.username.required && errors.push('Username é obtigatório.')
       return errors
     },
     passwordErrors () {
       const errors = []
       if (!this.$v.socio.password.$dirty) { return errors }
-      !this.$v.socio.password.minLength && errors.push('Password must have a minimum of 3 characters.')
-      !this.$v.socio.password.required && errors.push('Password is required.')
+      !this.$v.socio.password.minLength && errors.push('Password deve ter no mínimo 3 carateres.')
+      !this.$v.socio.password.required && errors.push('Password é obtigatória.')
       return errors
     },
     emailErrors () {
       const errors = []
       if (!this.$v.socio.email.$dirty) { return errors }
-      !this.$v.socio.email.email && errors.push('Must be valid e-mail.')
-      !this.$v.socio.email.required && errors.push('E-mail is required.')
+      !this.$v.socio.email.email && errors.push('Insira um email válido.')
+      !this.$v.socio.email.required && errors.push('E-mail é obtigatório.')
       return errors
     }
   },

@@ -2,6 +2,7 @@ package entities;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Null;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
@@ -16,7 +17,12 @@ import java.util.Set;
 public class Atleta extends Socio implements Serializable {
     @NotNull
     @ManyToMany
-    @JoinColumn(name="ATLETA_USERNAME")
+    @JoinTable(name = "ATLETA_MODALIDADES", joinColumns = {
+            @JoinColumn(name = "ATLETA_USERNAME", referencedColumnName = "USERNAME")},
+            inverseJoinColumns = {
+                    @JoinColumn(name = "NOME_MODALIDADE", referencedColumnName ="NOME"),
+                    @JoinColumn(name = "ESCALAO_MODALIDADE", referencedColumnName ="ESCALAO"),
+            })
     private Set<Modalidade> modalidades;
     // Horarios
 

@@ -7,37 +7,36 @@
         <v-row dense>
           <v-col>
             <v-text-field
-              v-model='atleta.username'
-              label='Username'
+              v-model="treinador.username"
+              label="Username"
               outlined
               dense
-              readonly
-              disabled>
-            </v-text-field>
+              disabled
+            ></v-text-field>
           </v-col>
           <v-col>
             <v-text-field
-              v-model="atleta.nome"
+              v-model="treinador.nome"
               label="Nome"
               :error-messages="nomeErrors"
               outlined
               dense
-              @input="$v.atleta.nome.$touch()"
-              @blur="$v.atleta.nome.$touch()"
+              @input="$v.treinador.nome.$touch()"
+              @blur="$v.treinador.nome.$touch()"
             ></v-text-field>
           </v-col>
         </v-row>
         <v-row dense>
           <v-col>
             <v-text-field
-              v-model="atleta.email"
+              v-model="treinador.email"
               label="Email Address"
               :error-messages="emailErrors"
               outlined
               dense
               required
-              @input="$v.atleta.email.$touch()"
-              @blur="$v.atleta.email.$touch()"
+              @input="$v.treinador.email.$touch()"
+              @blur="$v.treinador.email.$touch()"
             ></v-text-field>
           </v-col>
           <v-col>
@@ -72,10 +71,10 @@ import { validationMixin } from 'vuelidate'
 import { required, maxLength, minLength, email } from 'vuelidate/lib/validators'
 
 export default {
-  props: [ 'title', 'atleta' ],
+  props: ["title", "treinador"],
   mixins: [validationMixin],
   validations: {
-    atleta: {
+    treinador: {
       nome: { required, maxLength: maxLength(25) },
       email: { required, email },
     },
@@ -91,9 +90,9 @@ export default {
   computed: {
     nomeErrors () {
       const errors = []
-      if (!this.$v.atleta.nome.$dirty) { return errors }
-      !this.$v.atleta.nome.maxLength && errors.push('Nome deve ter no máximo 25 carateres.')
-      !this.$v.atleta.nome.required && errors.push('Name é obtigatório.')
+      if (!this.$v.treinador.nome.$dirty) { return errors }
+      !this.$v.treinador.nome.maxLength && errors.push('Nome deve ter no máximo 25 carateres.')
+      !this.$v.treinador.nome.required && errors.push('Name é obtigatório.')
       return errors
     },
     passwordErrors () {
@@ -104,9 +103,9 @@ export default {
     },
     emailErrors () {
       const errors = []
-      if (!this.$v.atleta.email.$dirty) { return errors }
-      !this.$v.atleta.email.email && errors.push('Insira um email válido.')
-      !this.$v.atleta.email.required && errors.push('E-mail é obtigatório.')
+      if (!this.$v.treinador.email.$dirty) { return errors }
+      !this.$v.treinador.email.email && errors.push('Insira um email válido.')
+      !this.$v.treinador.email.required && errors.push('E-mail é obtigatório.')
       return errors
     }
   },
@@ -116,25 +115,28 @@ export default {
       this.$emit("close");
     },
     edit () {
+      this.$v.$touch()
+      if (this.$v.$error) {
+        return
+      }
       if (this.password !== '') {
-        //console.log(this.password)
-        this.$axios.$put(`/api/atletas/${this.atleta.username}`, {
+        this.$axios.$put(`/api/treinadores/${this.treinador.username}`, {
           password: this.password,
-          nome: this.atleta.nome,
-          email: this.atleta.email
+          nome: this.treinador.nome,
+          email: this.treinador.email
         })
-          .then(() => {
-            this.close()
-          })
+        .then(() => {
+          this.close()
+        })
       } else {
-        this.$axios.$put(`/api/atletas/${this.atleta.username}`, {
+        this.$axios.$put(`/api/treinadores/${this.treinador.username}`, {
           password: null,
-          nome: this.atleta.nome,
-          email: this.atleta.email
+          nome: this.treinador.nome,
+          email: this.treinador.email
         })
-          .then(() => {
-            this.close()
-          })
+        .then(() => {
+          this.close()
+        })
       }
     }
   }

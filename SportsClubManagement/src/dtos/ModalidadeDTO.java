@@ -8,10 +8,18 @@ import java.util.Set;
 
 public class ModalidadeDTO implements Serializable {
     public String nome, escalao;
-    public Set<Treinador> treinadores;
-    public Set<Atleta> atletas;
+    public Set<TreinadorDTO> treinadores;
+    public Set<AtletaDTO> atletas;
 
     public ModalidadeDTO() {
+    }
+
+    public ModalidadeDTO(String nome) {
+        this.nome = nome;
+    }
+
+    public ModalidadeDTO(String escalao, int flag) {
+        this.escalao = escalao;
     }
 
     public ModalidadeDTO(String nome, String escalao) {
@@ -19,7 +27,7 @@ public class ModalidadeDTO implements Serializable {
         this.escalao = escalao;
     }
 
-    public ModalidadeDTO(String nome, Set<Treinador> treinadores, Set<Atleta> atletas, String escalao) {
+    public ModalidadeDTO(String nome, Set<TreinadorDTO> treinadores, Set<AtletaDTO> atletas, String escalao) {
         this.nome = nome;
         this.treinadores = treinadores;
         this.atletas = atletas;
@@ -42,19 +50,19 @@ public class ModalidadeDTO implements Serializable {
         this.escalao = escalao;
     }
 
-    public Set<Treinador> getTreinadores() {
+    public Set<TreinadorDTO> getTreinadores() {
         return treinadores;
     }
 
-    public void setTreinadores(Set<Treinador> treinadores) {
+    public void setTreinadores(Set<TreinadorDTO> treinadores) {
         this.treinadores = treinadores;
     }
 
-    public Set<Atleta> getAtletas() {
+    public Set<AtletaDTO> getAtletas() {
         return atletas;
     }
 
-    public void setAtletas(Set<Atleta> atletas) {
+    public void setAtletas(Set<AtletaDTO> atletas) {
         this.atletas = atletas;
     }
 }

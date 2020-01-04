@@ -10,6 +10,8 @@
       <br />
       <nuxt-link to="/atletas">Atletas</nuxt-link>
       <br />
+      <nuxt-link to="/treinadores">Treinadores</nuxt-link>
+      <br />
       <nuxt-link to="/produtos">Produtos</nuxt-link>
     </b-container>
   </div>

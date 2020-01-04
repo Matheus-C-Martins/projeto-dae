@@ -3,7 +3,7 @@ package ejbs;
 import entities.Atleta;
 import entities.Modalidade;
 import entities.User;
-import ws.ModalidadePK;
+import entities.ModalidadePK;
 
 import javax.ejb.EJBException;
 import javax.ejb.Stateless;

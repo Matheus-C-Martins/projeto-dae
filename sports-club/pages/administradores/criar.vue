@@ -93,29 +93,29 @@ export default {
     nomeErrors () {
       const errors = []
       if (!this.$v.administrador.nome.$dirty) { return errors }
-      !this.$v.administrador.nome.maxLength && errors.push('Name must be at most 25 characters long.')
-      !this.$v.administrador.nome.required && errors.push('Name is required.')
+      !this.$v.administrador.nome.maxLength && errors.push('Nome deve ter no máximo 25 carateres.')
+      !this.$v.administrador.nome.required && errors.push('Name é obtigatório.')
       return errors
     },
     usernameErrors () {
       const errors = []
       if (!this.$v.administrador.username.$dirty) { return errors }
-      !this.$v.administrador.username.maxLength && errors.push('Username must be at most 10 characters long.')
-      !this.$v.administrador.username.required && errors.push('Username is required.')
+      !this.$v.administrador.username.maxLength && errors.push('Username deve ter no máximo 10 carateres.')
+      !this.$v.administrador.username.required && errors.push('Username é obtigatório.')
       return errors
     },
     passwordErrors () {
       const errors = []
       if (!this.$v.administrador.password.$dirty) { return errors }
-      !this.$v.administrador.password.minLength && errors.push('Password must have a minimum of 3 characters.')
-      !this.$v.administrador.password.required && errors.push('Password is required.')
+      !this.$v.administrador.password.minLength && errors.push('Password deve ter no mínimo 3 carateres.')
+      !this.$v.administrador.password.required && errors.push('Password é obtigatória.')
       return errors
     },
     emailErrors () {
       const errors = []
       if (!this.$v.administrador.email.$dirty) { return errors }
-      !this.$v.administrador.email.email && errors.push('Must be valid e-mail.')
-      !this.$v.administrador.email.required && errors.push('E-mail is required.')
+      !this.$v.administrador.email.email && errors.push('Insira um email válido.')
+      !this.$v.administrador.email.required && errors.push('E-mail é obtigatório.')
       return errors
     }
   },

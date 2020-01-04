@@ -4,40 +4,41 @@
     <v-card>
       <v-data-table
         :loading='loading'
-        loading-text='A carregar produtos... Aguarde um momento'
-        item-key='tipo'
+        loading-text='A carregar treinadores... Aguarde um momento'
+        item-key='username'
         expand-icon
         :headers='headers'
-        :items='produtos'
+        :items='treinadores'
         class='elevation-1'
-        no-data-text='Não existem produtos'
+        no-data-text='Não existem treinadores'
         :search="search"
       >
         <template v-slot:top>
           <v-toolbar flat color='white'>
-            <v-toolbar-title>Produtos</v-toolbar-title>
+            <v-toolbar-title> Treinadores </v-toolbar-title>
             <v-divider class='mx-4' inset vertical></v-divider>
             <v-text-field
               v-model="search"
-              label="Procurar por tipo"
+              label="Procurar por Email"
               hide-details
               outlined
               dense
             ></v-text-field>
             <v-spacer></v-spacer>
             <v-dialog v-model="dialogEdit" max-width='500px'>
-              <edit-produto @close="closeEdit" :key="editarKey" :produto="editedItem" :title="formTitle"></edit-produto>
+              <edit-treinador @close="closeEdit" :key="editarKey" :treinador="editedItem" :title="formTitle"></edit-treinador>
             </v-dialog>
             <v-dialog v-model='dialog' max-width='500px'>
               <template v-slot:activator='{ on }'>
-                <v-btn color='primary' dark class='mb-2' v-on='on' @click="criarKey+=1">Criar Produto</v-btn>
+                <v-btn color='primary' dark class='mb-2' v-on='on' @click="criarKey+=1">Criar Treinador</v-btn>
               </template>
-              <create-produto @close="close" :key="criarKey" :produto="editedItem" :title="formTitle"></create-produto>
+              <create-treinador @close="close" :key="criarKey" :treinador="editedItem" :title="formTitle"></create-treinador>
             </v-dialog>
           </v-toolbar>
         </template>
-        <template v-slot:item.action="{ item }">
-          <v-icon small class="mr-2" @click="editItem(item)"> {{ icons.mdiPencil }} </v-icon>
+        <template v-slot:item.action="{ item }">          
+          <v-icon small @click="expandItem(item)"> {{ icons.mdiAccount }} </v-icon>
+          <v-icon small @click="editItem(item)"> {{ icons.mdiPencil }} </v-icon>
           <v-icon small @click="deleteItem(item)"> {{ icons.mdiDelete }} </v-icon>
         </template>
       </v-data-table>
@@ -47,53 +48,55 @@
     </v-card>
   </v-app>
 </template>
-
 <script>
 /* eslint-disable */
-import { mdiPencil, mdiDelete } from '@mdi/js'
-import EditarProduto from './editar'
-import CriarProduto from './criar'
+import { mdiPencil, mdiDelete, mdiAccount } from '@mdi/js'
+import EditarTreinador from './editar'
+import CriarTreinador from './criar'
 
 export default {
   components: {
-    'edit-produto': EditarProduto,
-    'create-produto': CriarProduto
+    'edit-treinador': EditarTreinador,
+    'create-treinador': CriarTreinador
   },
   data () {
     return {
       loading: true,
-      search: '',
       icons: {
         mdiPencil,
-        mdiDelete
+        mdiDelete,
+        mdiAccount
       },
       headers: [
-        { text: 'Tipo', value: 'tipo', align: 'center', sortable: false },
-        { text: 'Descrição', value: 'descrição', align: 'center', sortable: false, filterable: false },
-        { text: 'Valor Base', value: 'valorBase', align: 'center', sortable: false, filterable: false },
-        { text: 'Actions', value: 'action',  align: 'center', sortable: false, filterable: false }
+        { text: 'Username', value: 'username', align: 'center', sortable: false, filterable: false },
+        { text: 'Nome', value: 'nome', align: 'center', sortable: false, filterable: false },
+        { text: 'Email', value: 'email', align: 'center', sortable: false },
+        { text: 'Ações', value: 'action', align: 'center', sortable: false, filterable: false }
       ],
-      produtos: [],
+      treinadores: [],
       dialog: false,
       dialogEdit: false,
+      search: '',
       editarKey: 0,
       criarKey: 0,
       editedIndex: -1,
       editedItem: {
-        tipo: '',
-        descrição: '',
-        valorBase: 0
+        username: '',
+        nome: '',
+        email: '',
+        password: ''
       },
       defaultItem: {
-        tipo: '',
-        descrição: '',
-        valorBase: 0
+        username: '',
+        nome: '',
+        email: '',
+        password: ''
       }
     }
   },
   computed: {
     formTitle () {
-      return this.editedIndex === -1 ? 'Novo Produto' : 'Editar Produto'
+      return this.editedIndex === -1 ? 'Novo Treinador' : 'Editar Treinador'
     }
   },
   watch: {
@@ -105,35 +108,37 @@ export default {
     }
   },
   created () {
-    this.getProdutos()
+    this.getTreinadores()
   },
   methods: {
-    getProdutos () {
-      this.$axios.$get('/api/produtos').then((produtos) => {
-        this.produtos = produtos
+    getTreinadores () {
+      this.$axios.$get('/api/treinadores').then((treinadores) => {
+        this.treinadores = treinadores
         this.loading = false
       })
     },
     editItem (item) {
       this.editarKey += 1;
-      this.editedIndex = this.produtos.indexOf(item)
+      this.editedIndex = this.treinadores.indexOf(item)
       this.editedItem = Object.assign({}, item)
       this.dialogEdit = true
     },
     deleteItem (item) {
-      confirm(`Tem a certeza que pertende eliminar o Produto: ${item.tipo}?`) &&
-      this.$axios.$delete(`/api/produtos/${item.tipo}`, {})
-        .then(() => {
-          this.loading = true
-          this.getProdutos()
-        })
+      confirm(`Tem a certeza que pertende eliminar o Treinadores: ${item.username}?`) &&
+      this.$axios.$delete(`/api/treinadores/${item.username}`, {}).then(() => {
+        this.loading = true
+        this.getTreinadores()
+      })
+    },
+    expandItem (item) {
+      this.$router.push(`/treinadores/${item.username}`)
     },
     back () {
       this.$router.push('/')
     },
     close () {
       this.dialog = false
-      this.getProdutos()
+      this.getTreinadores()
       setTimeout(() => {
         this.editedItem = Object.assign({}, this.defaultItem)
         this.editedIndex = -1
@@ -141,7 +146,7 @@ export default {
     },
     closeEdit () {
       this.dialogEdit = false
-      this.getProdutos()
+      this.getTreinadores()
       setTimeout(() => {
         this.editedItem = Object.assign({}, this.defaultItem)
         this.editedIndex = -1

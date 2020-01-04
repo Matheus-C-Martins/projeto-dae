@@ -55,7 +55,8 @@
 <script>
 /* eslint-disable */
 import { validationMixin } from 'vuelidate'
-import { required, maxLength, minLength, numeric, minValue } from 'vuelidate/lib/validators'
+import { required, maxLength, minLength, minValue, helpers } from 'vuelidate/lib/validators'
+export const valueRegex = helpers.regex('valueRegex', /^\d*\.?\d*$/i)
 
 export default {
   props: ["title", "produto"],
@@ -64,7 +65,7 @@ export default {
     produto: {
       tipo: { required, maxLength: maxLength(25) },
       descrição: { required, maxLength: maxLength(255) },
-      valorBase: { required, numeric, minValue: minValue(0.01) }
+      valorBase: { required, valueRegex, minValue: minValue(0.01) }
     }
   },
   computed: {
@@ -85,7 +86,7 @@ export default {
     valorBaseErrors () {
       const errors = []
       if (!this.$v.produto.valorBase.$dirty) { return errors }
-      !this.$v.produto.valorBase.numeric && errors.push('Valor Base tem de conter apenas números.')
+      !this.$v.produto.valorBase.valueRegex && errors.push('Valor Base tem de conter apenas números.')
       !this.$v.produto.valorBase.minValue && errors.push('Valor Base tem de ser maior que €0.01.')
       !this.$v.produto.valorBase.required && errors.push('Valor Base é necessário.')
       return errors

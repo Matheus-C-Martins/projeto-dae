@@ -1,5 +1,7 @@
 package ejbs;
 
+import entities.Modalidade;
+
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.ejb.Singleton;
@@ -18,6 +20,8 @@ public class ConfigBean {
     ProdutoBean produtoBean;
     @EJB
     AtletaBean atletaBean;
+    @EJB
+    TreinadorBean treinadorBean;
 
     @PostConstruct
     public void populateDB() {
@@ -41,6 +45,16 @@ public class ConfigBean {
             System.out.print("A Inserir Atletas na Bade Dados...");
             atletaBean.create("2171316", "1234", "Matheus Martins", "2171316@my.ipleiria.pt");
             atletaBean.create("8888888", "1234", "Atleta", "8888888@my.ipleiria.pt");
+            System.out.println("OK");
+
+            System.out.print("A Inserir Treinadores na Bade Dados...");
+            treinadorBean.create("8080808", "1234", "Treinador", "8080808@my.ipleiria.pt");
+            treinadorBean.create("0000000", "1234", "Treinador2", "0000000@my.ipleiria.pt");
+            System.out.println("OK");
+
+            System.out.print("A Adicionar Modalidades a Treinadores...");
+            treinadorBean.enrollTreinadorInModalidade("8080808", "Basquetebol", "Sub-18");
+            treinadorBean.enrollTreinadorInModalidade("0000000", "Voleibol", "Sub-18");
             System.out.println("OK");
 
             System.out.print("A Adicionar Modalidades a Atletas...");

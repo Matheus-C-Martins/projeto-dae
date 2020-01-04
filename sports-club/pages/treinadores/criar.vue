@@ -7,44 +7,44 @@
         <v-row dense>
           <v-col>
             <v-text-field
-              v-model="atleta.username"
+              v-model="treinador.username"
               label="Username"
               :error-messages="usernameErrors"
               outlined
               dense
-              @input="$v.atleta.username.$touch()"
-              @blur="$v.atleta.username.$touch()"
+              @input="$v.treinador.username.$touch()"
+              @blur="$v.treinador.username.$touch()"
             ></v-text-field>
           </v-col>
           <v-col>
             <v-text-field
-              v-model="atleta.nome"
+              v-model="treinador.nome"
               label="Nome"
               :error-messages="nomeErrors"
               outlined
               dense
-              @input="$v.atleta.nome.$touch()"
-              @blur="$v.atleta.nome.$touch()"
+              @input="$v.treinador.nome.$touch()"
+              @blur="$v.treinador.nome.$touch()"
             ></v-text-field>
           </v-col>
         </v-row>
         <v-row dense>
           <v-col>
             <v-text-field
-              v-model="atleta.email"
+              v-model="treinador.email"
               label="Email Address"
               :error-messages="emailErrors"
               outlined
               dense
               required
-              @input="$v.atleta.email.$touch()"
-              @blur="$v.atleta.email.$touch()"
+              @input="$v.treinador.email.$touch()"
+              @blur="$v.treinador.email.$touch()"
             ></v-text-field>
           </v-col>
           <v-col>
             <v-text-field
-              v-model="atleta.password"
-              :value="atleta.password"
+              v-model="treinador.password"
+              :value="treinador.password"
               label="Password"
               :append-icon="value ? 'mdi-eye' : 'mdi-eye-off'"
               @click:append="() => (value = !value)"
@@ -52,8 +52,8 @@
               :error-messages="passwordErrors"
               outlined
               dense
-              @input="$v.atleta.password.$touch()"
-              @blur="$v.atleta.password.$touch()">
+              @input="$v.treinador.password.$touch()"
+              @blur="$v.treinador.password.$touch()">
               </v-text-field>
           </v-col>
         </v-row>
@@ -114,10 +114,10 @@ import { validationMixin } from 'vuelidate'
 import { required, maxLength, minLength, email } from 'vuelidate/lib/validators'
 
 export default {
-  props: ["title", "atleta"],
+  props: ["title", "treinador"],
   mixins: [validationMixin],
   validations: {
-    atleta: {
+    treinador: {
       nome: { required, maxLength: maxLength(25) },
       username: { required, maxLength: maxLength(10) },
       email: { required, email },
@@ -136,33 +136,33 @@ export default {
       escaloes: []
     }
   },
-  computed: {
+ computed: {
     nomeErrors () {
       const errors = []
-      if (!this.$v.atleta.nome.$dirty) { return errors }
-      !this.$v.atleta.nome.maxLength && errors.push('Nome deve ter no máximo 25 carateres.')
-      !this.$v.atleta.nome.required && errors.push('Name é obtigatório.')
+      if (!this.$v.treinador.nome.$dirty) { return errors }
+      !this.$v.treinador.nome.maxLength && errors.push('Nome deve ter no máximo 25 carateres.')
+      !this.$v.treinador.nome.required && errors.push('Name é obtigatório.')
       return errors
     },
     usernameErrors () {
       const errors = []
-      if (!this.$v.atleta.username.$dirty) { return errors }
-      !this.$v.atleta.username.maxLength && errors.push('Username deve ter no máximo 10 carateres.')
-      !this.$v.atleta.username.required && errors.push('Username é obtigatório.')
+      if (!this.$v.treinador.username.$dirty) { return errors }
+      !this.$v.treinador.username.maxLength && errors.push('Username deve ter no máximo 10 carateres.')
+      !this.$v.treinador.username.required && errors.push('Username é obtigatório.')
       return errors
     },
     passwordErrors () {
       const errors = []
-      if (!this.$v.atleta.password.$dirty) { return errors }
-      !this.$v.atleta.password.minLength && errors.push('Password deve ter no mínimo 3 carateres.')
-      !this.$v.atleta.password.required && errors.push('Password é obtigatória.')
+      if (!this.$v.treinador.password.$dirty) { return errors }
+      !this.$v.treinador.password.minLength && errors.push('Password deve ter no mínimo 3 carateres.')
+      !this.$v.treinador.password.required && errors.push('Password é obtigatória.')
       return errors
     },
     emailErrors () {
       const errors = []
-      if (!this.$v.atleta.email.$dirty) { return errors }
-      !this.$v.atleta.email.email && errors.push('Insira um email válido.')
-      !this.$v.atleta.email.required && errors.push('E-mail é obtigatório.')
+      if (!this.$v.treinador.email.$dirty) { return errors }
+      !this.$v.treinador.email.email && errors.push('Insira um email válido.')
+      !this.$v.treinador.email.required && errors.push('E-mail é obtigatório.')
       return errors
     },
     modalidadeErrors() {
@@ -190,14 +190,14 @@ export default {
       if (this.$v.$error) {
         return
       }
-      this.$axios.$post('/api/atletas', {
-        username: this.atleta.username,
-        password: this.atleta.password,
-        nome: this.atleta.nome,
-        email: this.atleta.email
+      this.$axios.$post('/api/treinadores', {
+        username: this.treinador.username,
+        password: this.treinador.password,
+        nome: this.treinador.nome,
+        email: this.treinador.email
       })
       .then(() => {
-        this.$axios.$post(`/api/atletas/${this.atleta.username}/modalidades`, {
+        this.$axios.$post(`/api/treinadores/${this.treinador.username}/modalidades`, {
           nome : this.modalidade.nome,
           escalao : this.escalao.escalao
         })

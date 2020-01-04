@@ -2,25 +2,25 @@
 <template>
   <v-app id="inspier">
     <v-card>
-      <v-card-title style="padding-bottom: 0px" class="headline"> Detalhes do Atleta </v-card-title>
+      <v-card-title style="padding-bottom: 0px" class="headline"> Detalhes do Treinador </v-card-title>
       <v-card-text class="pa-0">
         <v-form align="center">
           <v-row dense>
             <v-col>
               <v-card color="#e2e2e2">
-                <h6 style=""> Username: </h6> {{atleta.username}}
+                <h6 style=""> Username: </h6> {{treinador.username}}
               </v-card>
             </v-col>
             <v-col>
               <v-card color="#e2e2e2">
-                <h6 style=""> Nome: </h6> {{atleta.nome}}
+                <h6 style=""> Nome: </h6> {{treinador.nome}}
               </v-card>
             </v-col>
           </v-row>
           <v-row dense>
             <v-col>
               <v-card color="#e2e2e2">
-                <h6 style=""> Email: </h6> {{atleta.email}}
+                <h6 style=""> Email: </h6> {{treinador.email}}
               </v-card>
             </v-col>
           </v-row>
@@ -35,13 +35,13 @@
           no-data-text='Não existem modalidades'>
           <template v-slot:top>
             <v-toolbar flat color='white'>
-              <v-toolbar-title> Modalidades Inscrito: </v-toolbar-title>
+              <v-toolbar-title> Modalidades Que Treina: </v-toolbar-title>
               <v-spacer></v-spacer>
               <v-dialog v-model='dialog' max-width='500px'>
                 <template v-slot:activator='{ on }'>
-                  <v-btn color='primary' dark class='mb-2' v-on='on' @click="componentKey+=1"> Increver Atleta Em Nova Modalidade </v-btn>
+                  <v-btn color='primary' dark class='mb-2' v-on='on' @click="componentKey+=1"> Nova Modalidade Para Treinar </v-btn>
                 </template>
-                <inscrever-atleta @close="close" :atleta="atleta" :key="componentKey"></inscrever-atleta>
+                <inscrever-treinador @close="close" :treinador="treinador" :key="componentKey"></inscrever-treinador>
               </v-dialog>
             </v-toolbar>
           </template>
@@ -60,11 +60,11 @@
 <script>
 /* eslint-disable */
 import { mdiDelete } from '@mdi/js'
-import IncreverAtleta from './inscrever'
+import IncreverTreinador from './inscrever'
 
 export default {
   components: {
-    'inscrever-atleta': IncreverAtleta
+    'inscrever-treinador': IncreverTreinador
   },
   data() {
     return {
@@ -72,7 +72,7 @@ export default {
       dialog: false,
       componentKey: 0,
       icons: { mdiDelete },
-      atleta: {},
+      treinador: {},
       headers: [
         { text: 'Nome', value: 'nome', align: 'center', sortable: false },
         { text: 'Escalão', value: 'escalao', align: 'center', sortable: false },
@@ -96,7 +96,7 @@ export default {
   },
   methods: {
     initialize() {
-      this.$axios.$get(`/api/atletas/${this.username}`).then(atleta => (this.atleta = atleta || {}));
+      this.$axios.$get(`/api/treinadores/${this.username}`).then(treinador => (this.treinador = treinador || {}));
       this.getModalidades();
     },
     close() {
@@ -109,15 +109,15 @@ export default {
       }, 300)
     },
     back () {
-      this.$router.push('/atletas')
+      this.$router.push('/treinadores')
     },
     getModalidades(){
-      this.$axios.$get(`/api/atletas/${this.username}/modalidades`).then(modalidades => (this.modalidades = modalidades || {}));
+      this.$axios.$get(`/api/treinadores/${this.username}/modalidades`).then(modalidades => (this.modalidades = modalidades || {}));
       this.loading = false;
     },
     deleteItem (item) {
       confirm(`Tem a certeza que pertende desinscrever esta modalidade: ${item.nome} ${item.escalao}?`) &&
-      this.$axios.$delete(`/api/atletas/${this.username}/modalidades/${item.nome}&&${item.escalao}`, {}).then(() => {
+      this.$axios.$delete(`/api/treinadores/${this.username}/modalidades/${item.nome}&&${item.escalao}`, {}).then(() => {
           this.loading = true;
           this.initialize();
         })

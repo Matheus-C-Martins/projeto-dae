@@ -1,19 +1,19 @@
 <!-- eslint-disable -->
 <template>
   <v-card>
-    <v-card-title class="headline"> Increver Atleta Em Nova Modalidade </v-card-title>
+    <v-card-title class="headline"> Nova Modalidade Para Treinar </v-card-title>
     <v-card-text class="pa-0">
       <v-container style="padding-bottom: 0px; padding-top: 0px;">
         <v-form align="center">
           <v-row dense>
             <v-col>
               <v-card color="#e2e2e2">
-                <h6 style=""> Username: </h6> {{atleta.username}}
+                <h6 style=""> Username: </h6> {{treinador.username}}
               </v-card>
             </v-col>
             <v-col>
               <v-card color="#e2e2e2">
-                <h6 style=""> Nome: </h6> {{atleta.nome}}
+                <h6 style=""> Nome: </h6> {{treinador.nome}}
               </v-card>
             </v-col>
           </v-row>
@@ -75,7 +75,7 @@ import { validationMixin } from 'vuelidate'
 import { required } from 'vuelidate/lib/validators'
 
 export default {
-  props: [ 'atleta' ],
+  props: [ 'treinador' ],
   mixins: [validationMixin],
   validations: {
     escalao: { required },
@@ -117,7 +117,7 @@ export default {
       if (this.$v.$error) {
         return
       }
-      this.$axios.$post(`/api/atletas/${this.atleta.username}/modalidades`, {
+      this.$axios.$post(`/api/treinadores/${this.treinador.username}/modalidades`, {
         nome : this.modalidade.nome,
         escalao : this.escalao.escalao
       })
